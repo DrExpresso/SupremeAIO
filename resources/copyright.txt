@@ -1,0 +1,7 @@
+Copyright by Susumu Yoshida - http://www.mcdodesign.com/
+- address_book_32.png
+- AddressApp.ico
+
+Copyright by Jan Jan Kovařík - http://glyphicons.com/
+- calendar.png
+- edit.png
