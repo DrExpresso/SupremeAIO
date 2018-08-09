@@ -1,5 +1,5 @@
 # SupremeAIO
-All in one checkout Tool request and browser based with multi-threading to automate checking out products on supremenewyork. 
+All in one checkout Tool request and browser based with multi-threading to automate checking out products on supremenewyork. [My Twitter for any inquiries](https://twitter.com/DrExpresso).
 
 ![alt text](https://github.com/DrExpresso/SupremeAIO/blob/master/SupremeAIO_1.PNG)
 
@@ -42,7 +42,7 @@ All in one checkout Tool request and browser based with multi-threading to autom
 - [ ] **Mac Support**
 
 # Install
-> - Download and **run the exe file as Administrator**, installer will automatically extract and install files to your local C drive in program files. Application is 32 bit.
+> - Download and **run the exe file as Administrator**, installer will automatically extract and install files to your local C drive in program files. Application is 32 bit. If you need any help contact my [Twitter](https://twitter.com/DrExpresso).
 
 # Usage
 After installation you want to load the bot up and add your billing information under File > Profile Editor. 
