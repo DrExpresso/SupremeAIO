@@ -3,7 +3,9 @@ All in one checkout Tool request and browser based with multi-threading to autom
 
 ![alt text](https://github.com/DrExpresso/SupremeAIO/blob/master/SupremeAIO_1.PNG)
 
-![alt text](https://image.ibb.co/cWbbY9/bot.gif)
+<img src="https://github.com/DrExpresso/SupremeAIO/blob/master/bot.gif?raw=true" width="auto" height="auto" />
+
+
 
 [DOWNLOAD LINK](https://github.com/DrExpresso/SupremeAIO/releases/tag/1.0.0)
 
