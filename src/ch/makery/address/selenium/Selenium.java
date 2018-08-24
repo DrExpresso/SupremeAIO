@@ -1,22 +1,30 @@
 package ch.makery.address.selenium;
 
 
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Select;
-import ch.makery.address.model.Person;
+
 import ch.makery.address.model.keywordInfo;
 import ch.makery.address.view.SupremeBotOverviewController;
 
@@ -34,37 +42,63 @@ public class Selenium {
 	private String PROXY = "http://" + keywordInfo.getKeywordInfo().getProxy();
 
 	// Import Billing Info Details from saved model(Person)
-	private String billingFirstName = Person.getPersonInfo().getFullName();
-	private String billingEmail = Person.getPersonInfo().getEmail();
-	private String telephone = Person.getPersonInfo().getTelephone();
-	private String billingAddress = Person.getPersonInfo().getAddress();
-	private String billingCity = Person.getPersonInfo().getCity();
-	private String billingPostcode = Person.getPersonInfo().getPostcode();
-	private String cardNumber = Person.getPersonInfo().getCardNumber();
-	private String cardCvv = Person.getPersonInfo().getCvv();
-	public ChromeDriver driver;
-
+	private String billingFirstName;
+	private String billingEmail;
+	private String telephone;
+	private String billingAddress;
+	private String billingCity;
+	private String billingPostcode;
+	private String country;
+	private String cardType;
+	private String cardNumber;
+	private String cardExpiry;
+	private String cardYear;
+	private String cardCvv;
 	
+	
+	public ChromeDriver driver;
 	private int retryCounter = 10;
+	private int checkoutDelay = keywordInfo.getKeywordInfo().getCheckoutDelay();
+	
+	//Console Objects
+	private PrintWriter printWriter;
 	
 	public static Selenium getTesting() {
 		return selenium;
 	}
 	
-	public static void main(String[] args) throws InterruptedException, IOException {
+	public static void main(String[] args) throws InterruptedException, IOException, ParseException {
 			Selenium testrun = new Selenium();
 			testrun.fullRun();
 	}
-
-	public void fullRun() throws IOException, InterruptedException {
+	
+	
+	public void initialize() throws IOException  {
+	}
+	
+	public void fullRun() throws IOException, InterruptedException, ParseException {
 			/*****************************************************
 			 * Headless property -- Uncomment to use headless browser ChromeOptions headless
 			 * = new ChromeOptions(); headless.addArguments("--headless"); WebDriver driver
 			 * = new ChromeDriver(headless);
 			 *****************************************************/
-
+		
+		//Create Log File
+		try (Writer file = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/" + "/Log_Task_" + "1" + ".txt")) {
+			file.flush();
+			System.out.println("Successfully created log file");
+		}
+		
+		//Start the print writer to Log to the file
+		FileWriter rawLogOutput = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/Log_Task_1.txt");
+		printWriter = new PrintWriter(rawLogOutput);
+		
+		printWriter.println("LOG [TASK: " + "1 -- " +  " Time: " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "]");
+		printWriter.println();
+		
 			//PROXY -- IP Authentication only 
 			ChromeOptions options = new ChromeOptions();		
+			
 //			
 //			  if (PROXY.contains("localhost")) {
 //				Proxy proxy = new Proxy();
@@ -107,23 +141,23 @@ public class Selenium {
 			
 
 			// Select Size and add to cart
-			WebElement mySelectElement = driver.findElement(By.name("size"));
+			WebElement mySelectElement = driver.findElement(By.xpath("//*[@id=\"size\"]"));
 			Select dropdown = new Select(mySelectElement);
 			
-			if (dropdown.getOptions().contains(size)) {
-				System.out.println("Size found");
+			
+			
+			if (dropdown.getOptions() != null) {
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Size found");
 				dropdown.selectByVisibleText(size);
 				driver.findElement(By.name("commit")).click();
-				System.out.println("Cart successfull!");
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Cart successful!");
 			} else {
 				for (int i = 0; i < retryCounter; i++) {
-					System.out.println("Size not Found");
-					System.out.println("Retrying in  3 seconds");
+					printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Size not Found... Retrying in  3 seconds");
 					Thread.sleep(3000);
 					driver.navigate().refresh();
 				}
 			}
-		
 			
 			//Sleep incase the add to cart is not detected
 			Thread.sleep(1000);
@@ -135,7 +169,34 @@ public class Selenium {
 			String checkoutUrl = driver.getCurrentUrl();
 
 			if (checkoutUrl.contains("checkout")) {
-				System.out.println("Checking out");
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Checking out");
+				
+				printWriter.close();
+
+				//Open JSON Parse file to get billing and shipping info
+				JSONParser parser = new JSONParser();
+				
+				JSONObject a = (JSONObject) parser.parse(new FileReader(System.getProperty("user.dir")+ "/resources/json" + "/Default_Profile.json"));
+				
+				billingFirstName = (String) a.get("Fullname");
+				billingEmail = (String) a.get("Email");
+				telephone = (String) a.get("Telephone");
+				billingAddress = (String) a.get("Address");
+				billingCity  = (String) a.get("City");
+				billingPostcode  = (String) a.get("Postcode");
+				country = (String) a.get("Country");
+				cardType = (String) a.get("Card Type");
+				cardExpiry = (String) a.get("Card Expiry Month");
+				cardYear = (String) a.get("Card Expiry Year");
+				cardNumber = (String) a.get("Card Number");
+				cardCvv = (String) a.get("Card Security Code");
+				
+				
+				//Check T&C box
+				WebElement element = driver.findElement(By.xpath("//*[@id=\"cart-cc\"]/fieldset/p/label/div/ins"));
+				js.executeScript("arguments[0].click();", element);
+				
+				//Shipping and Billing Info text input				
 				WebElement fullname = driver.findElement(By.id("order_billing_name"));
 				js.executeScript("arguments[0].value='" + billingFirstName + "';", fullname);
 				WebElement email = driver.findElement(By.id("order_email"));
@@ -148,14 +209,51 @@ public class Selenium {
 				js.executeScript("arguments[0].value='" + billingCity + "';", city);
 				WebElement postcode = driver.findElement(By.id("order_billing_zip"));
 				js.executeScript("arguments[0].value='" + billingPostcode + "';", postcode);
-				WebElement number = driver.findElement(By.id("cnb"));
+				
+				//Select Country
+				WebElement countryDropDown = driver.findElement(By.xpath("//*[@id=\"order_billing_country\"]"));
+				countryDropDown.click();
+				new Select(countryDropDown).selectByVisibleText(country);
+				
+				//Select Card Type
+				js.executeScript("$('select[name=\"credit_card[type]\"]').click();");
+				Select cardTypeDropDown = new Select(driver.findElement(By.name("credit_card[type]")));
+				cardTypeDropDown.selectByVisibleText(cardType);
+				
+				WebElement number = driver.findElement(By.name("credit_card[cnb]"));
 				js.executeScript("arguments[0].value='" + cardNumber + "';", number);
+				
+				//Select Card Expiry and Year
+				WebElement expiryMonthDropDown = driver.findElement(By.xpath("//*[@id=\"credit_card_month\"]"));
+				expiryMonthDropDown.click();
+				new Select(expiryMonthDropDown).selectByVisibleText(cardExpiry);
+				
+				WebElement expiryYearDropDown = driver.findElement(By.xpath("//*[@id=\"credit_card_year\"]"));
+				expiryYearDropDown.click();
+				new Select(expiryYearDropDown).selectByVisibleText(cardYear);
+				
 				WebElement cvv = driver.findElement(By.id("vval"));
 				js.executeScript("arguments[0].value='" + cardCvv + "';", cvv);
-				driver.findElement(By.className("iCheck-helper")).click();
-
+				
+				
+				
+				if (checkoutDelay > 0) {
+					Thread.sleep(checkoutDelay);
+					WebElement checkoutButton = driver.findElement(By.name("commit"));
+					js.executeScript("arguments[0].click();", checkoutButton);
+				} else {
+					WebElement checkoutButton = driver.findElement(By.name("commit"));
+					js.executeScript("arguments[0].click();", checkoutButton);
+				}
+				
+			} else {
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Checkout Failed");
 			}
-		}
+			
+			if(driver.getPageSource().contains("you will recieve a shipping confirmation with the tracking number")) {
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Checked out");
+			}
+	}
 	
 	
 	//Method to input authenticate in chrome Browser -- currently not working
@@ -194,10 +292,10 @@ public class Selenium {
 			for (Element info : articles) {
 				if (info.getElementsByClass("name-link").toString().contains(keyword) && info.getElementsByClass("name-link").get(1).toString().contains(color)) {
 					attributes.put(info.getElementsByClass("name-link").text(), info.getElementsByClass("name-link").attr("abs:href").toString());
-					System.out.println("Item Found!");
+					printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Found!");
 				} 
 				else {
-					 System.out.println("Item Not Found! Retrying");
+					printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! Retrying!");
 				}
 			}
 	
