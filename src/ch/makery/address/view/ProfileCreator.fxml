@@ -25,6 +25,7 @@
         <rowConstraints>
           <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="45.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="22.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -50,78 +51,78 @@
                   <Insets bottom="10.0" left="80.0" />
                </GridPane.margin>
             </ImageView>
-            <Label prefHeight="39.0" prefWidth="101.0" text="Full name:" GridPane.rowIndex="2">
+            <Label prefHeight="39.0" prefWidth="101.0" text="Full name:" GridPane.rowIndex="3">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField id="txtFullName" fx:id="txtFullName" promptText="full name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="Email:" GridPane.rowIndex="3">
+            <TextField id="txtFullName" fx:id="txtFullName" promptText="full name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="Email:" GridPane.rowIndex="4">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="txtEmail" promptText="email" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="Telephone:" GridPane.rowIndex="4">
+            <TextField fx:id="txtEmail" promptText="email" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="Telephone:" GridPane.rowIndex="5">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="txtTelephone" promptText="telephone" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="Address:" GridPane.rowIndex="5">
+            <TextField fx:id="txtTelephone" promptText="telephone" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="Address:" GridPane.rowIndex="6">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="txtAddress" promptText="address" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="Address 2:" GridPane.rowIndex="6">
+            <TextField fx:id="txtAddress" promptText="address" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="Address 2:" GridPane.rowIndex="7">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="txtAddress2" promptText="address 2" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="City:" GridPane.rowIndex="7">
+            <TextField fx:id="txtAddress2" promptText="address 2" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="City:" GridPane.rowIndex="8">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="txtCity" promptText="city" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="Postcode:" GridPane.rowIndex="8">
+            <TextField fx:id="txtCity" promptText="city" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="Postcode:" GridPane.rowIndex="9">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="txtPostcode" promptText="postcode" GridPane.columnIndex="1" GridPane.rowIndex="8" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="Country:" GridPane.rowIndex="9">
+            <TextField fx:id="txtPostcode" promptText="postcode" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="Country:" GridPane.rowIndex="10">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cboCountry" prefWidth="150.0" value="United Kingdom" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-            <ComboBox fx:id="cboCardType" prefHeight="25.0" prefWidth="150.0" value="VISA" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="Card Type:" GridPane.rowIndex="12">
+            <ComboBox fx:id="cboCountry" prefWidth="150.0" value="United Kingdom" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+            <ComboBox fx:id="cboCardType" prefHeight="25.0" prefWidth="150.0" value="VISA" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="Card Type:" GridPane.rowIndex="13">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <TextField fx:id="txtCardNumber" promptText="card number" GridPane.columnIndex="1" GridPane.rowIndex="13" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="Card Number:" GridPane.rowIndex="13">
+            <TextField fx:id="txtCardNumber" promptText="card number" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="Card Number:" GridPane.rowIndex="14">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cboExpiryMonth" prefHeight="25.0" prefWidth="85.0" value="08" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-            <Label prefHeight="33.0" prefWidth="135.0" text="Expiry Month/ Year:" GridPane.rowIndex="14">
+            <ComboBox fx:id="cboExpiryMonth" prefHeight="25.0" prefWidth="85.0" value="08" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+            <Label prefHeight="33.0" prefWidth="135.0" text="Expiry Month/ Year:" GridPane.rowIndex="15">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cboExpiryYear" prefHeight="25.0" prefWidth="85.0" value="2020" GridPane.columnIndex="1" GridPane.rowIndex="14">
+            <ComboBox fx:id="cboExpiryYear" prefHeight="25.0" prefWidth="85.0" value="2020" GridPane.columnIndex="1" GridPane.rowIndex="15">
                <GridPane.margin>
                   <Insets left="100.0" />
                </GridPane.margin></ComboBox>
-            <TextField fx:id="txtCvv" promptText="cvv" GridPane.columnIndex="1" GridPane.rowIndex="15" />
-            <HBox prefHeight="36.0" prefWidth="288.0" GridPane.columnIndex="1" GridPane.rowIndex="16">
+            <TextField fx:id="txtCvv" promptText="cvv" GridPane.columnIndex="1" GridPane.rowIndex="16" />
+            <HBox prefHeight="36.0" prefWidth="288.0" GridPane.columnIndex="1" GridPane.rowIndex="17">
                <children>
                   <Button mnemonicParsing="false" onAction="#setProfileDetails" prefHeight="25.0" prefWidth="87.0" text="Save Profile" />
                   <Button fx:id="loadProfile" mnemonicParsing="false" onAction="#loadProfile" prefHeight="25.0" prefWidth="87.0" text="Load Profile">
@@ -136,22 +137,28 @@
                   </Button>
                </children>
             </HBox>
-            <Label prefHeight="39.0" prefWidth="101.0" text="Profile Loader:" GridPane.rowIndex="11">
+            <Label prefHeight="39.0" prefWidth="101.0" text="Profile Loader:" GridPane.rowIndex="12">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <ComboBox fx:id="cboProfileName" onAction="#initialize" prefWidth="150.0" promptText="No profiles" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-            <Label prefHeight="39.0" prefWidth="101.0" text="CVV:" GridPane.rowIndex="15">
+            <ComboBox fx:id="cboProfileName" onAction="#initialize" prefWidth="150.0" promptText="No profiles" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+            <Label prefHeight="39.0" prefWidth="101.0" text="CVV:" GridPane.rowIndex="16">
                <font>
                   <Font size="15.0" />
                </font>
             </Label>
-            <HBox prefHeight="28.0" prefWidth="181.0" GridPane.columnSpan="2" GridPane.rowIndex="10">
+            <HBox prefHeight="28.0" prefWidth="181.0" GridPane.columnSpan="2" GridPane.rowIndex="11">
                <children>
                   <Separator prefHeight="27.0" prefWidth="421.0" />
                </children>
             </HBox>
+            <Label prefHeight="39.0" prefWidth="101.0" text="Profile Name:" GridPane.rowIndex="2">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField id="txtFullName" fx:id="txtProfileName" promptText="profile name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
          <padding>
             <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
