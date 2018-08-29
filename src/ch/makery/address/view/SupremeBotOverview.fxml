@@ -32,13 +32,14 @@
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleEditPerson" text="Profile Editor" />
                         <MenuItem mnemonicParsing="false" onAction="#handleRecaptchaWindow" text="Recaptcha Harvester" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleStatTimeWindow" text="Start Time" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleStartTimerDialog" text="Start Time" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleCheckoutDelayDialog" text="Checkout Delay" />
                     <MenuItem mnemonicParsing="false" onAction="#handleExitButton" text="Exit" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
-                    <MenuItem mnemonicParsing="false" text="Keywords" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleKeywordWindow" text="Keywords" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Theme">
@@ -312,11 +313,11 @@
                                        </VBox.margin>
                                        <columns>
                                           <TableColumn fx:id="idColumn" editable="false" prefWidth="41.0" resizable="false" text="ID" />
-                                          <TableColumn fx:id="itemColumn" editable="false" prefWidth="188.0" resizable="false" text="ITEM" />
-                                          <TableColumn fx:id="billingColumn" editable="false" prefWidth="141.0" resizable="false" text="BILLING PROFILE" />
-                                          <TableColumn fx:id="proxyColumn" editable="false" minWidth="6.0" prefWidth="128.0" resizable="false" text="PROXY" />
-                                          <TableColumn fx:id="modeColumn" editable="false" minWidth="6.0" prefWidth="107.0" resizable="false" text="MODE" />
-                                          <TableColumn fx:id="statusColumn" editable="false" minWidth="0.0" prefWidth="129.0" resizable="false" text="STATUS" />
+                                          <TableColumn fx:id="itemColumn" editable="false" prefWidth="163.0" resizable="false" text="ITEM" />
+                                          <TableColumn fx:id="billingColumn" editable="false" prefWidth="144.0" resizable="false" text="BILLING PROFILE" />
+                                          <TableColumn fx:id="proxyColumn" editable="false" minWidth="6.0" prefWidth="117.0" resizable="false" text="PROXY" />
+                                          <TableColumn fx:id="modeColumn" editable="false" minWidth="6.0" prefWidth="96.0" resizable="false" text="MODE" />
+                                          <TableColumn fx:id="statusColumn" editable="false" minWidth="0.0" prefWidth="173.0" resizable="false" text="STATUS" />
                                        </columns>
                                     </TableView>
                                  </children>
