@@ -18,9 +18,13 @@ public class SupremeTask {
 	private final SimpleStringProperty status;
 	private final SimpleStringProperty statusRunning;
 	private final SimpleStringProperty foundItem;
+	private final SimpleStringProperty fetchingVariants;
+	private final SimpleStringProperty addingToCart;
 	private final SimpleStringProperty checkout;
 	private final SimpleStringProperty checkedOut;
-	
+	private final SimpleStringProperty reCaptchaToken;
+	private final SimpleStringProperty startTimer;
+	private final SimpleStringProperty itemNotFound;
 	
 	public SupremeTask() {
         this(null, null, null, null, null, null);
@@ -34,9 +38,14 @@ public class SupremeTask {
 			this.status =  new SimpleStringProperty(status);
 			this.mode =  new SimpleStringProperty(mode);
 			this.statusRunning = new SimpleStringProperty("Running");
-			this.foundItem = new SimpleStringProperty("Adding to cart...");
+			this.foundItem = new SimpleStringProperty("Item found");
+			this.itemNotFound = new SimpleStringProperty("Item not found");
+			this.addingToCart = new SimpleStringProperty("Adding to cart...");
+			this.fetchingVariants = new SimpleStringProperty("Fetching variants.");
 			this.checkout = new SimpleStringProperty("Checking out");
+			this.reCaptchaToken = new SimpleStringProperty("Captcha required");
 			this.checkedOut = new SimpleStringProperty("Check your email");
+			this.startTimer = new SimpleStringProperty("Launching at: " + keywordInfo.getKeywordInfo().getStartTimer());
 		}
 
 		public String getId( ) {
@@ -64,8 +73,20 @@ public class SupremeTask {
 			return proxy;
 		}
 		
+		public StringProperty getItemNotFoundProperty( ) {
+			return itemNotFound;
+		}
+		
+		public StringProperty getFetchingVariantsProperty( ) {
+			return fetchingVariants;
+		}
+		
 		public StringProperty getStatusProperty( ) {
 			return status;
+		}
+		
+		public StringProperty getStartTimerProperty( ) {
+			return startTimer;
 		}
 		
 		public StringProperty getStatusRunningProperty( ) {
@@ -74,6 +95,14 @@ public class SupremeTask {
 		
 		public StringProperty getFoundItemProperty( ) {
 			return foundItem;
+		}
+		
+		public StringProperty getRecaptchaTokenProperty( ) {
+			return reCaptchaToken;
+		}
+		
+		public StringProperty getAddingToCartProperty( ) {
+			return addingToCart;
 		}
 		
 		public StringProperty getCheckoutProperty( ) {
