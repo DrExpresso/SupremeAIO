@@ -20,6 +20,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -30,7 +31,6 @@ import ch.makery.address.view.SupremeBotOverviewController;
 
 public class Selenium {
 
-	public final static Selenium selenium = new Selenium();
 	private String mainURL = "https://www.supremenewyork.com/shop/all/";
 	private String checkoutURL = "https://www.supremenewyork.com/checkout";
 	private HashMap<String, String> attributes = new HashMap<String, String>();
@@ -39,6 +39,7 @@ public class Selenium {
 	private String size = keywordInfo.getKeywordInfo().getSize();
 	private String category = keywordInfo.getKeywordInfo().getCatagory();
 	private String color = keywordInfo.getKeywordInfo().getColor();
+	private String profileLoader = keywordInfo.getKeywordInfo().getProfileLoader();
 	private String PROXY = "http://" + keywordInfo.getKeywordInfo().getProxy();
 
 	// Import Billing Info Details from saved model(Person)
@@ -60,21 +61,20 @@ public class Selenium {
 	private int retryCounter = 10;
 	private int checkoutDelay = keywordInfo.getKeywordInfo().getCheckoutDelay();
 	
+	private SupremeBotOverviewController controller;
+	
 	//Console Objects
 	private PrintWriter printWriter;
+
 	
-	public static Selenium getTesting() {
-		return selenium;
+	public Selenium(SupremeBotOverviewController controller) {
+		this.controller = controller;
 	}
 	
-	public static void main(String[] args) throws InterruptedException, IOException, ParseException {
-			Selenium testrun = new Selenium();
-			testrun.fullRun();
+	public  void main(String[] args) throws InterruptedException, IOException, ParseException {
+			this.fullRun();
 	}
 	
-	
-	public void initialize() throws IOException  {
-	}
 	
 	public void fullRun() throws IOException, InterruptedException, ParseException {
 			/*****************************************************
@@ -86,7 +86,7 @@ public class Selenium {
 		//Create Log File
 		try (Writer file = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/" + "/Log_Task_" + "1" + ".txt")) {
 			file.flush();
-			System.out.println("Successfully created log file");
+			controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Successfully created log file \n");
 		}
 		
 		//Start the print writer to Log to the file
@@ -96,9 +96,10 @@ public class Selenium {
 		printWriter.println("LOG [TASK: " + "1 -- " +  " Time: " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "]");
 		printWriter.println();
 		
+		controller.statusColumnUpdateRunning();
+				
 			//PROXY -- IP Authentication only 
 			ChromeOptions options = new ChromeOptions();		
-			
 //			
 //			  if (PROXY.contains("localhost")) {
 //				Proxy proxy = new Proxy();
@@ -116,7 +117,6 @@ public class Selenium {
 //			//	System.out.println(PROXY.toString() + keywordInfo.getKeywordInfo().getProxy().toString());
 //			//-----------------------------------------//
 //			}
-			//System.setProperty("webdriver.chrome.driver", "C://Users//Prati//Documents//eclipse-workspace//Projects//SupremeAIO//resources/chromedriver.exe");
 			
 	         System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+ "/resources/" +"/chromedriver.exe");
 
@@ -127,7 +127,18 @@ public class Selenium {
 			JavascriptExecutor js = (JavascriptExecutor) driver;
 
 			//Launch method for finding keyword
-			this.keywordFinder();
+		
+		
+			try {
+					this.keywordFinder();
+					controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! Retrying!  \n");
+			} catch (WebDriverException e) {
+				controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! \n");
+				controller.statusColumnUpdateItemNotFound();
+				driver.close();
+				Thread.currentThread().stop();
+			}
+				
 
 			//Error handler
 			if (driver.getCurrentUrl() == null) {
@@ -135,7 +146,17 @@ public class Selenium {
 			}
 
 			//
-			driver.get(finalURL);
+
+			try {
+				driver.get(finalURL);
+			} catch (WebDriverException e) {
+				driver.close();
+				Thread.currentThread().stop();
+			}
+			
+			controller.statusColumnUpdateItemFound();
+			controller.getConsole().appendText("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task - Item Found \n");
+			
 			
 		
 			
@@ -150,10 +171,13 @@ public class Selenium {
 				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Size found");
 				dropdown.selectByVisibleText(size);
 				driver.findElement(By.name("commit")).click();
+				controller.statusColumnUpdateAddingToCart();
 				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Cart successful!");
+				controller.getConsole().appendText("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task - Cart successful! \n");
 			} else {
 				for (int i = 0; i < retryCounter; i++) {
 					printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Size not Found... Retrying in  3 seconds");
+					controller.getConsole().appendText("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task - Size not Found... Retrying in  3 seconds \n");
 					Thread.sleep(3000);
 					driver.navigate().refresh();
 				}
@@ -170,13 +194,15 @@ public class Selenium {
 
 			if (checkoutUrl.contains("checkout")) {
 				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Checking out");
+				controller.statusColumnUpdateCheckingOut();
+				controller.getConsole().appendText("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task - Checking out \n");
 				
 				printWriter.close();
 
-				//Open JSON Parse file to get billing and shipping info
+				//Open JSON Parse file to get billing and shipping info				
 				JSONParser parser = new JSONParser();
 				
-				JSONObject a = (JSONObject) parser.parse(new FileReader(System.getProperty("user.dir")+ "/resources/json" + "/Default_Profile.json"));
+				JSONObject a = (JSONObject) parser.parse(new FileReader(System.getProperty("user.dir")+ "/resources/json/" + profileLoader  +".json"));
 				
 				billingFirstName = (String) a.get("Fullname");
 				billingEmail = (String) a.get("Email");
@@ -241,17 +267,26 @@ public class Selenium {
 					Thread.sleep(checkoutDelay);
 					WebElement checkoutButton = driver.findElement(By.name("commit"));
 					js.executeScript("arguments[0].click();", checkoutButton);
+					controller.statusColumnUpdateRecaptcha();
+					controller.getConsole().appendText("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task - Please solve captcha \n");
+					Thread.currentThread().wait();
 				} else {
 					WebElement checkoutButton = driver.findElement(By.name("commit"));
 					js.executeScript("arguments[0].click();", checkoutButton);
+					controller.statusColumnUpdateRecaptcha();
+					controller.getConsole().appendText("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task - Please solve captcha \n");
+					Thread.currentThread().wait();
 				}
 				
 			} else {
 				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Checkout Failed");
+				controller.getConsole().appendText("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task - Checkout Failed \n");
 			}
 			
 			if(driver.getPageSource().contains("you will recieve a shipping confirmation with the tracking number")) {
 				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Checked out");
+				controller.statusColumnUpdateCheckedOut();
+				controller.getConsole().appendText("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task - Checked out! \n");
 			}
 	}
 	
@@ -283,20 +318,24 @@ public class Selenium {
 			
 			//Connect to requested webpage if errors are clear
 			org.jsoup.nodes.Document doc = Jsoup.connect(mainURL + category).get();
-			System.out.println(doc.baseUri());
 			
 	
 			//Search webpage for keyword within articles and store in the attributes hashmap 
 			List<Element> articles = doc.getElementsByClass("inner-article");
-	
-			for (Element info : articles) {
-				if (info.getElementsByClass("name-link").toString().contains(keyword) && info.getElementsByClass("name-link").get(1).toString().contains(color)) {
-					attributes.put(info.getElementsByClass("name-link").text(), info.getElementsByClass("name-link").attr("abs:href").toString());
-					printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Found!");
-				} 
-				else {
-					printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! Retrying!");
+			try {
+				for (Element info : articles) {
+					if (info.getElementsByClass("name-link").toString().contains(keyword) && info.getElementsByClass("name-link").get(1).toString().contains(color)) {
+						attributes.put(info.getElementsByClass("name-link").text(), info.getElementsByClass("name-link").attr("abs:href").toString());
+						printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Found!");
+					} 
+					else  {
+						printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! Retrying!");
+						controller.statusColumnUpdateItemNotFound();
+					}
 				}
+			} catch (WebDriverException e) {
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! Retrying!");
+				controller.statusColumnUpdateItemNotFound();
 			}
 	
 			// Get the URL from the HashMap, clean it and save it in finalURL
@@ -309,15 +348,12 @@ public class Selenium {
 		} catch (NullPointerException e) {
 	        e.printStackTrace();
 	        driver.quit();
-	        SupremeBotOverviewController.getSupremeBotOverviewController().stopTasks();
 	    } catch (HttpStatusException e) {
 	        e.printStackTrace();
 	        driver.quit();
-	        SupremeBotOverviewController.getSupremeBotOverviewController().stopTasks();
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	        driver.quit();
-	        SupremeBotOverviewController.getSupremeBotOverviewController().stopTasks();
 	    }
 	}
 
