@@ -1,8 +1,13 @@
 package ch.makery.address.view;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import ch.makery.address.MainApp;
 import ch.makery.address.model.ENUMstatus;
@@ -14,9 +19,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -29,10 +32,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
-public class SupremeBotOverviewController implements Initializable, EventHandler<ActionEvent> {
+public class SupremeBotOverviewController {
 
 	@FXML
 	private TextField keywords;
@@ -80,7 +82,6 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 	private RadioButton autocheck;
 
 	// Reference to the main application.
-	private final static SupremeBotOverviewController controller = new SupremeBotOverviewController();
 	private MainApp mainApp;
 	private MyThread thread;
 	private ENUMstatus enumstatus;
@@ -105,26 +106,28 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 	private Integer taskCounter = 1;
 	public String st[] = new String[100];
 	public int noOfTasksID;
-
-	public SupremeBotOverviewController() {
-	}
 	
-	public static SupremeBotOverviewController getSupremeBotOverviewController() {
-		return controller;
-	}
+	
+	private SupremeBotOverviewController passableController;
+	
 
 	/**
 	 * Is called by the main application to give a reference back to itself.
 	 * 
 	 * @param mainApp
+	 * @param botController 
 	 */
-	public void setMainApp(MainApp mainApp) {
+	public void setMainApp(MainApp mainApp, SupremeBotOverviewController botController) {
+		this.passableController = botController;
 		this.mainApp = mainApp;
 		supremeTask.setItems(mainApp.getTaskData());
 		supremeTask.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		supremeTask.setPlaceholder(new Label(""));
 	}
 	
+	public ObservableList<String> getProfileList(){
+		return profileList;
+	}
 
 	public TableView<SupremeTask> returnTasks() {
 		return supremeTask;
@@ -141,13 +144,9 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 	public TextArea getConsole() {
 		return console;
 	}
-
-	/**
-	 * Initializes the controller class. This method is automatically called after
-	 * the fxml file has been loaded.
-	 */
-	@FXML
-	private void initialize() {
+	
+	public ComboBox<String> getCboProfiles(){
+		return profiles;
 	}
 
 	@FXML
@@ -157,15 +156,32 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 
 	@FXML
 	private void handleRecaptchaWindow(ActionEvent action) {
-		//Open Captcha Window
+		//Open captcha Window
 		mainApp.showRecaptchaWindow();
 	}
 	
 	@FXML
-	private void handleStatTimeWindow(ActionEvent action) {
-		//Open Captcha Window
-		this.showInputTextDialog();
+	private void handleKeywordWindow(ActionEvent action) throws FileNotFoundException {
+		//Open Keyword Window
+		mainApp.keywordDialog();
 	}
+	
+	@FXML
+	private void handleStartTimerDialog(ActionEvent action) {
+		//Open Start Timer dialog
+		mainApp.timerDialog();
+	}
+	
+	@FXML
+	private void handleCheckoutDelayDialog(ActionEvent action) {
+		//Open checkout delay dialog
+		mainApp.checkoutDelayDialog();
+	}
+	
+	public void consoleWriter(String temp) {
+		console.appendText(temp);
+	}
+	
 	
 
 	@FXML
@@ -179,12 +195,35 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 	private void handleCloseWindow() {
 		Platform.exit();
 	}
-
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	
+	/**
+	 * Initializes the controller class. This method is automatically called after
+	 * the fxml file has been loaded.
+	 */
+	@FXML
+	public void initialize() {
 		try {
-			//Adds items to selection boxes 
-			profileList.add(Person.getPersonInfo().getProfileName());
+			//Checking Folder resources/json for profiles and adding them to the Combo Boxes 
+			try {
+				File folder = new File(System.getProperty("user.dir")+ "/resources/json/");
+				File[] listOfFiles = folder.listFiles();
+
+				for (File file : listOfFiles) {
+				    if (file.isFile()) {
+				        profileList.add(file.getName().replace(".json", ""));
+				    }
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			idColumn.setCellValueFactory(cellData -> cellData.getValue().getIdProperty());
+			itemColumn.setCellValueFactory(cellData -> cellData.getValue().getIemProperty());
+			billingColumn.setCellValueFactory(cellData -> cellData.getValue().getBillingProperty());
+			proxyColumn.setCellValueFactory(cellData -> cellData.getValue().getProxyProperty());
+			modeColumn.setCellValueFactory(cellData -> cellData.getValue().getModeProperty());
+			statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
+		
 			profiles.setItems(profileList);
 			profiles.getSelectionModel().select(0);
 			
@@ -199,31 +238,48 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 
 			colour.setItems(colourList);
 			colour.getSelectionModel().select(0);
-
-			idColumn.setCellValueFactory(cellData -> cellData.getValue().getIdProperty());
-			itemColumn.setCellValueFactory(cellData -> cellData.getValue().getIemProperty());
-			billingColumn.setCellValueFactory(cellData -> cellData.getValue().getBillingProperty());
-			proxyColumn.setCellValueFactory(cellData -> cellData.getValue().getProxyProperty());
-			modeColumn.setCellValueFactory(cellData -> cellData.getValue().getModeProperty());
-			statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
+			
+			this.consoleWriter("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Initialized Bot \n");
+			
 		} catch (Exception ex) {
-			//ex.printStackTrace();
+			ex.printStackTrace();
+			
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			ex.printStackTrace(pw);
+			String exceptionText = sw.toString();
+			    
+			try {
+				mainApp.errorStackTraceDialog("Stack Trace Error: See Log", exceptionText);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		
 		}
 	}
 
 	
 	@FXML
-	public void createTask(ActionEvent event) throws InterruptedException, IOException {
+	public void createTask(ActionEvent event) throws InterruptedException, IOException, ParseException {
+		boolean startTimer = keywordInfo.getKeywordInfo().getHasRunStarted();
+		
+		
 		//Start threads with selenium or requests
-		thread = new MyThread();
+		thread = new MyThread(passableController);
 		thread.main(null);
-
+		
 		//Change column status to 'running'
-		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusRunningProperty());
-		statusColumn.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-		supremeTask.refresh();
+		if (startTimer == true) {
+			statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStartTimerProperty());
+			statusColumn.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+			supremeTask.refresh();
+		} else if (startTimer == false) {
+			statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusRunningProperty());
+			statusColumn.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+			supremeTask.refresh();
+		}
 	}
-	
 
 	
 	/*
@@ -234,7 +290,8 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
 		statusColumn.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
 		supremeTask.refresh();
-		MyThread.getThread().killThread();
+		
+		Thread.currentThread().interrupt();
 	}
 	
 	
@@ -244,7 +301,60 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 		supremeTask.setPlaceholder(new Label(""));
 		taskCounter = 1;
 	}
+	
+	//Status Column Updates
+	public void statusColumnUpdateRunning() {
+		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusRunningProperty());
+		statusColumn.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+		supremeTask.refresh();
+	}
+	
+	public void statusColumnUpdateItemFound() {
+		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getFoundItemProperty());
+		statusColumn.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+		supremeTask.refresh();
+	}
+	
+	public void statusColumnUpdateItemNotFound() {
+		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getItemNotFoundProperty());
+		statusColumn.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+		supremeTask.refresh();
+	}
+	
+	public void statusColumnUpdateFetchingVariants() {
+		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getFetchingVariantsProperty());
+		statusColumn.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+		supremeTask.refresh();
+	}
+	
+	public void statusColumnUpdateAddingToCart() {
+		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getAddingToCartProperty());
+		statusColumn.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+		supremeTask.refresh();
+	}
+	
+	public void statusColumnUpdateCheckingOut() {
+		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getCheckedOutProperty());
+		statusColumn.setStyle("-fx-text-fill: orange; -fx-font-weight: bold;");
+		supremeTask.refresh();
+	}
+	
+	public void statusColumnUpdateRecaptcha() {
+		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getRecaptchaTokenProperty());
+		statusColumn.setStyle("-fx-text-fill: #005cf2; -fx-font-weight: bold;");
+		supremeTask.refresh();
+	}
+	
+	public void statusColumnUpdateCheckedOut() {
+		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getCheckedOutProperty());
+		statusColumn.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+		supremeTask.refresh();
+	}
+	
+	
 
+	
+	//Themes
 	@FXML
 	private void toggleDarkTheme() {
 		Scene loader = mainApp.main; //Loads the object into the scene so it can be accessed from this class
@@ -292,6 +402,7 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 			String proxyID = txtProxy.getText().toString();
 			
 			String profileID = profiles.getSelectionModel().getSelectedItem().toString();
+			keywordInfo.getKeywordInfo().setProfileLoader(profileID);
 	
 			String modeID = modes.getSelectionModel().getSelectedItem().toString();
 			keywordInfo.getKeywordInfo().setMode(modeID);
@@ -310,6 +421,8 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 						ENUMstatus.Ready.toString(), modeID));
 				statusColumn.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
 				taskCounter = supremeTask.getItems().size() + 1;
+				
+				this.consoleWriter("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task created - [" + sizeID + ", " + keywordsID + ", "  + colourID + "]" + "\n");
 		}
 		
 		//Sets amount of tasks in model	
@@ -317,14 +430,6 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 		}
 	}
 	
-	
-	//Start Timer Dialog box
-	private void showInputTextDialog() {
-	    TextInputDialog dialogue = new TextInputDialog("11:00:00");
-	    dialogue.setTitle("Tasks Start Time");
-	    dialogue.setHeaderText("Enter time:");
-	    dialogue.setContentText("Time:");	 
-	}
 
 	//Custom alert dialog for errors
 	private void alertDialogBuilder(String title, String header, String content) {
@@ -335,8 +440,5 @@ public class SupremeBotOverviewController implements Initializable, EventHandler
 		alert.showAndWait();
 	}
 
-	@Override
-	public void handle(ActionEvent arg0) {
-		// TODO Auto-generated method stub
-	}
+	
 }
