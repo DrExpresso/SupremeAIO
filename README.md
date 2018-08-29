@@ -1,5 +1,5 @@
 # SupremeAIO
-All in one checkout Tool request and browser based with multi-threading to automate checking out products on supremenewyork. [My Twitter for any inquiries](https://twitter.com/DrExpresso).
+All in one checkout Tool request and browser based with multi-threading to automate checking out products on supremenewyork. [My Twitter for any inquiries](https://twitter.com/DrExpresso). **PLEASE RUN BOT AS ADMINISTRATOR**
 
 ![alt text](https://github.com/DrExpresso/SupremeAIO/blob/master/SupremeAIO_1.PNG)
 
@@ -25,15 +25,15 @@ All in one checkout Tool request and browser based with multi-threading to autom
 - [ ] **Documentation**
 - [x] **Checkout delay**
 - [x] **Google Sign in Support**
-- [ ] **Working console log**
-- [ ] **Status message updates**
+- [x] **Working console log**
+- [x] **Status message updates**
 - [x] **Task logs**
 - [ ] **Stop tasks and quite all running browsers and requests**
-- [ ] **Save and Load multiple billing profiles**
+- [x] **Save and Load multiple billing profiles**
 - [ ] **Proxy support on both modules**
 - [ ] **Encrypt Billing profiles in AES**
 - [ ] **Recaptcha Harvesting**
-- [ ] **Keyword Droplist in Help menu**
+- [x] **Keyword Droplist in Help menu**
 - [ ] **US checkout Support**
 - [ ] **Less RAM Usage**
 - [ ] **JXBrowser and PhantomJS Module support**
