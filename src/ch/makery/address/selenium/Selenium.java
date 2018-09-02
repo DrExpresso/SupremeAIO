@@ -124,7 +124,6 @@ public class Selenium {
 			// Create a new instance of the Chrome driver
 			driver = new ChromeDriver(options);
 		
-			JavascriptExecutor js = (JavascriptExecutor) driver;
 
 			//Launch method for finding keyword
 		
@@ -158,7 +157,14 @@ public class Selenium {
 			controller.getConsole().appendText("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task - Item Found \n");
 			
 			
-		
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			JavascriptExecutor billing_name_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_email_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_tel_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_address_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_postcode_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_card_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_cvv_js = (JavascriptExecutor) driver;
 			
 
 			// Select Size and add to cart
@@ -216,25 +222,20 @@ public class Selenium {
 				cardYear = (String) a.get("Card Expiry Year");
 				cardNumber = (String) a.get("Card Number");
 				cardCvv = (String) a.get("Card Security Code");
-				
+
 				
 				//Check T&C box
-				WebElement element = driver.findElement(By.xpath("//*[@id=\"cart-cc\"]/fieldset/p/label/div/ins"));
-				js.executeScript("arguments[0].click();", element);
+			//	WebElement element = driver.findElement(By.xpath("//*[@id=\"cart-cc\"]/fieldset/p/label/div/ins"));
+			//	js.executeScript("arguments[0].click();", element);
+				js.executeScript("document.getElementByClassName('order[terms]').setAttribute('selected', 'selected')");
+				billing_name_js.executeScript("document.getElementById('order_billing_name').setAttribute('value', 'John Doe')");
+				order_email_js.executeScript("document.getElementById('order_email').setAttribute('value', 'johndoe@gmail.com')");
+				order_tel_js.executeScript("document.getElementById('order_tel').setAttribute('value', '07899608391')");
+				order_address_js.executeScript("document.getElementById('bo').setAttribute('value', '1 Main Street')");
+				order_postcode_js.executeScript("document.getElementById('order_billing_zip').setAttribute('value', 'LE2 1LZ')");
+				order_card_js.executeScript("document.getElementById('cnb').setAttribute('value', '4658 5910 9812 8034')");
+				order_cvv_js.executeScript("document.getElementById('vval').setAttribute('value', '659')");
 				
-				//Shipping and Billing Info text input				
-				WebElement fullname = driver.findElement(By.id("order_billing_name"));
-				js.executeScript("arguments[0].value='" + billingFirstName + "';", fullname);
-				WebElement email = driver.findElement(By.id("order_email"));
-				js.executeScript("arguments[0].value='" + billingEmail + "';", email);
-				WebElement tel = driver.findElement(By.id("order_tel"));
-				js.executeScript("arguments[0].value='" + telephone + "';", tel);
-				WebElement address = driver.findElement(By.id("bo"));
-				js.executeScript("arguments[0].value='" + billingAddress + "';", address);
-				WebElement city = driver.findElement(By.id("order_billing_city"));
-				js.executeScript("arguments[0].value='" + billingCity + "';", city);
-				WebElement postcode = driver.findElement(By.id("order_billing_zip"));
-				js.executeScript("arguments[0].value='" + billingPostcode + "';", postcode);
 				
 				//Select Country
 				WebElement countryDropDown = driver.findElement(By.xpath("//*[@id=\"order_billing_country\"]"));
@@ -246,8 +247,7 @@ public class Selenium {
 				Select cardTypeDropDown = new Select(driver.findElement(By.name("credit_card[type]")));
 				cardTypeDropDown.selectByVisibleText(cardType);
 				
-				WebElement number = driver.findElement(By.name("credit_card[cnb]"));
-				js.executeScript("arguments[0].value='" + cardNumber + "';", number);
+				
 				
 				//Select Card Expiry and Year
 				WebElement expiryMonthDropDown = driver.findElement(By.xpath("//*[@id=\"credit_card_month\"]"));
@@ -258,8 +258,7 @@ public class Selenium {
 				expiryYearDropDown.click();
 				new Select(expiryYearDropDown).selectByVisibleText(cardYear);
 				
-				WebElement cvv = driver.findElement(By.id("vval"));
-				js.executeScript("arguments[0].value='" + cardCvv + "';", cvv);
+	
 				
 				
 				
