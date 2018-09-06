@@ -28,7 +28,7 @@ All in one checkout Tool request and browser based with multi-threading to autom
 - [x] **Working console log**
 - [x] **Status message updates**
 - [x] **Task logs**
-- [ ] **Stop tasks and quite all running browsers and requests**
+- [x] **Stop tasks and quite all running browsers and requests**
 - [x] **Save and Load multiple billing profiles**
 - [ ] **Proxy support on both modules**
 - [ ] **Encrypt Billing profiles in AES**
@@ -37,7 +37,7 @@ All in one checkout Tool request and browser based with multi-threading to autom
 - [ ] **US checkout Support**
 - [ ] **Less RAM Usage**
 - [ ] **JXBrowser and PhantomJS Module support**
-- [ ] **Each Task checking out different product with different billing**
+- [x] **Each Task checking out different product with different billing**
 - [ ] **Success logger**
 - [x] **Start Timer**
 - [ ] **Custom Installer**
