@@ -7,7 +7,7 @@ All in one checkout Tool request and browser based with multi-threading to autom
 
 
 
-[DOWNLOAD LINK](https://github.com/DrExpresso/SupremeAIO/releases/tag/1.0.0)
+[DOWNLOAD LINK](https://github.com/DrExpresso/SupremeAIO/releases)
 
 
 # Requirements
