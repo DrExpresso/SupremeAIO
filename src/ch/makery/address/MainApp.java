@@ -4,15 +4,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ch.makery.address.model.SupremeTask;
 import ch.makery.address.model.keywordInfo;
-import ch.makery.address.selenium.MyThread;
-import ch.makery.address.selenium.Selenium;
 import ch.makery.address.view.ProfileCreatorController;
 import ch.makery.address.view.SupremeBotOverviewController;
 import ch.makery.address.view.keywordController;
@@ -25,6 +24,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextInputDialog;
@@ -46,6 +47,9 @@ public class MainApp extends Application {
 	private SupremeBotOverviewController botController;
 	private ProfileCreatorController profileController;
 	private reCaptchaController recaptchaController;
+	
+    private Logger logger = Logger.getLogger(getClass().getName());
+
 
 	// Gets current Table
 	public ObservableList<SupremeTask> getTaskData() {
@@ -81,7 +85,7 @@ public class MainApp extends Application {
 			botController.setMainApp(this, botController);
 			
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "", e);
 		}
 	}
 
@@ -114,7 +118,7 @@ public class MainApp extends Application {
 
 			dialogue.show();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.SEVERE, "", e);
 		}
 	}
 
@@ -140,8 +144,7 @@ public class MainApp extends Application {
 			dialogStage.setScene(scene);
 			dialogStage.show();
 		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			logger.log(Level.SEVERE, "", e);		}
 	}
 
 	// Start Timer Dialog box
@@ -158,7 +161,17 @@ public class MainApp extends Application {
 		dialog.setTitle("Tasks start timer");
 		dialog.setContentText("Time:");
 		dialog.setGraphic(null);
+				
+		ButtonType resetTimer = new ButtonType("Reset");
+		dialog.getDialogPane().getButtonTypes().add(resetTimer);
+		
+		//Lookup button and reset the hasRunStarted variable to set timer to false
+		final Button reset = (Button) dialog.getDialogPane().lookupButton(resetTimer);
+		reset.addEventFilter(ActionEvent.ACTION, event -> 
+			keywordInfo.getKeywordInfo().setHasRunStarted(false)
+		);
 
+		
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()) {
 			keywordInfo.getKeywordInfo().setStartTimer(result.get());
@@ -167,7 +180,6 @@ public class MainApp extends Application {
 			keywordInfo.getKeywordInfo().setHasRunStarted(true);
 		}
 
-		dialog.show();
 	}
 
 	// Checkout delay
@@ -191,7 +203,6 @@ public class MainApp extends Application {
 			botController.consoleWriter("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Set checkout delay: " + result.get() + "\n");
 		}
 
-		dialog.show();
 	}
 	
 	//Keyword help
