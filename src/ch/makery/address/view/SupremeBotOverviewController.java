@@ -5,17 +5,26 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import ch.makery.address.MainApp;
 import ch.makery.address.model.ENUMstatus;
 import ch.makery.address.model.Person;
 import ch.makery.address.model.SupremeTask;
 import ch.makery.address.model.keywordInfo;
-import ch.makery.address.selenium.MyThread;
+import ch.makery.address.selenium.Request;
+import ch.makery.address.selenium.Selenium;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -71,6 +80,12 @@ public class SupremeBotOverviewController {
 	@FXML
 	public TableColumn<SupremeTask, String> itemColumn;
 	@FXML
+	private TableColumn<SupremeTask, String> colourColumn;
+	@FXML
+	private TableColumn<SupremeTask, String> categoryColumn;
+	@FXML
+	private TableColumn<SupremeTask, String> sizeColumn;
+	@FXML
 	private TableColumn<SupremeTask, String> billingColumn;
 	@FXML
 	private TableColumn<SupremeTask, String> proxyColumn;
@@ -83,16 +98,17 @@ public class SupremeBotOverviewController {
 
 	// Reference to the main application.
 	private MainApp mainApp;
-	private MyThread thread;
 	private ENUMstatus enumstatus;
 	private ObservableList<String> profileList = FXCollections.observableArrayList();
 	
+	public List<Thread> threads = new ArrayList<Thread>();
+	 
 	
 	//Option Values
 	private ObservableList<String> sizeList = FXCollections.observableArrayList("Small", "Medium", "Large", "XLarge", "---------", "onesize",
 			"---------", "30", "32", "34", "36", "38", "40");
 
-	private ObservableList<String> statusList = FXCollections.observableArrayList("new", "jackets", "shirts", "tops/ sweaters",
+	private ObservableList<String> statusList = FXCollections.observableArrayList("all", "jackets", "shirts", "tops_sweaters",
 			"sweatshirts", "pants", "shorts", "t-shirts", "hats", "bags", "accessories", "skate");
 
 	private ObservableList<String> modeList = FXCollections.observableArrayList("Browser", "Requests");
@@ -109,7 +125,7 @@ public class SupremeBotOverviewController {
 	
 	
 	private SupremeBotOverviewController passableController;
-	
+	private Selenium browser;
 
 	/**
 	 * Is called by the main application to give a reference back to itself.
@@ -131,6 +147,10 @@ public class SupremeBotOverviewController {
 
 	public TableView<SupremeTask> returnTasks() {
 		return supremeTask;
+	}
+	
+	public void setBrowserMode(Selenium browser) {
+		this.browser = browser;
 	}
 
 	public TextField getKeyword() {
@@ -182,8 +202,6 @@ public class SupremeBotOverviewController {
 		console.appendText(temp);
 	}
 	
-	
-
 	@FXML
 	private void handleExitButton(ActionEvent actionEvent) {
 		Node source = (Node) actionEvent.getSource();
@@ -217,10 +235,14 @@ public class SupremeBotOverviewController {
 				e.printStackTrace();
 			}
 			
+			
+			
 			idColumn.setCellValueFactory(cellData -> cellData.getValue().getIdProperty());
 			itemColumn.setCellValueFactory(cellData -> cellData.getValue().getIemProperty());
+			sizeColumn.setCellValueFactory(cellData -> cellData.getValue().getSizeProperty());
+			colourColumn.setCellValueFactory(cellData -> cellData.getValue().getColourProperty());
+			categoryColumn.setCellValueFactory(cellData -> cellData.getValue().getCategoryProperty());
 			billingColumn.setCellValueFactory(cellData -> cellData.getValue().getBillingProperty());
-			proxyColumn.setCellValueFactory(cellData -> cellData.getValue().getProxyProperty());
 			modeColumn.setCellValueFactory(cellData -> cellData.getValue().getModeProperty());
 			statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
 		
@@ -252,32 +274,9 @@ public class SupremeBotOverviewController {
 			try {
 				mainApp.errorStackTraceDialog("Stack Trace Error: See Log", exceptionText);
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		
-		}
-	}
-
-	
-	@FXML
-	public void createTask(ActionEvent event) throws InterruptedException, IOException, ParseException {
-		boolean startTimer = keywordInfo.getKeywordInfo().getHasRunStarted();
-		
-		
-		//Start threads with selenium or requests
-		thread = new MyThread(passableController);
-		thread.main(null);
-		
-		//Change column status to 'running'
-		if (startTimer == true) {
-			statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStartTimerProperty());
-			statusColumn.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-			supremeTask.refresh();
-		} else if (startTimer == false) {
-			statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusRunningProperty());
-			statusColumn.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
-			supremeTask.refresh();
 		}
 	}
 
@@ -287,11 +286,16 @@ public class SupremeBotOverviewController {
 	 * */
 	@FXML
 	public void stopTasks() {
+		browser.killBrowser();
+		
 		statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusProperty());
 		statusColumn.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
 		supremeTask.refresh();
 		
-		Thread.currentThread().interrupt();
+		for (Iterator<Thread> itr = threads.listIterator(); itr.hasNext();) {
+            Thread thread = itr.next();
+            thread.interrupt();
+        }
 	}
 	
 	
@@ -300,6 +304,7 @@ public class SupremeBotOverviewController {
 		supremeTask.getItems().clear();
 		supremeTask.setPlaceholder(new Label(""));
 		taskCounter = 1;
+		threads.clear();
 	}
 	
 	//Status Column Updates
@@ -374,59 +379,133 @@ public class SupremeBotOverviewController {
 		loader.getStylesheets().clear();
 		loader.getStylesheets().add(getClass().getResource("/css/ClearTheme.css").toExternalForm());
 	}
-
 	
 	//Fetches all the info typed into left panel and sets in the keywordInfo Model. 
 	@FXML
 	public void fetchCatogory(ActionEvent action) {
-		if (keywords.getText().toString() == null) {
-			this.alertDialogBuilder("Information Dialog", null, "Input Keyword");
+		if (keywords.getText().length() <= 0) {
+			this.alertDialogBuilder("Information Dialog", null, "Please Input Keyword");
 		} else {
 				
 			// Fetch keywords for size input	
 			String sizeID = sizes.getSelectionModel().getSelectedItem().toString();
-			keywordInfo.getKeywordInfo().setSize(sizeID);
 	
 			// Fetch keywords for input field
 			String keywordsID = keywords.getText().toString();
-			keywordInfo.getKeywordInfo().setKeyword(keywordsID);
 	
 			// Fetch selected catogory on the bot
 			String catagoryID = catogry.getValue();
-			keywordInfo.getKeywordInfo().setCatagory(catagoryID);
 	
 			// Fetch the select color
 			String colourID = colour.getValue();
-			keywordInfo.getKeywordInfo().setColor(colourID);
 	
 			String proxyID = txtProxy.getText().toString();
 			
 			String profileID = profiles.getSelectionModel().getSelectedItem().toString();
-			keywordInfo.getKeywordInfo().setProfileLoader(profileID);
 	
 			String modeID = modes.getSelectionModel().getSelectedItem().toString();
 			keywordInfo.getKeywordInfo().setMode(modeID);
 	
-		
+			
 			noOfTasksID = 0;
 			if (noOfTasks.getText().isEmpty()) {
 				noOfTasksID = 0;
 			} else {
 				noOfTasksID = Integer.parseInt(noOfTasks.getText());
 			}
-	
+				
 			//Add task to table
 			for (int i = 0; i < noOfTasksID; i++) {
-				mainApp.getTaskData().add(new SupremeTask(taskCounter.toString(), keywordsID, profileID, proxyID,
-						ENUMstatus.Ready.toString(), modeID));
+				mainApp.getTaskData().add(new SupremeTask(taskCounter.toString(), keywordsID, sizeID ,colourID , catagoryID, profileID, ENUMstatus.Ready.toString(), modeID));
 				statusColumn.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
 				taskCounter = supremeTask.getItems().size() + 1;
 				
 				this.consoleWriter("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Task created - [" + sizeID + ", " + keywordsID + ", "  + colourID + "]" + "\n");
 		}
-		
+
 		//Sets amount of tasks in model	
 		keywordInfo.getKeywordInfo().setTasks(supremeTask.getItems().size());
+		}
+	}
+	
+	@FXML
+	public void createTask(ActionEvent event) throws InterruptedException, IOException, ParseException {
+		boolean startTimer = keywordInfo.getKeywordInfo().getHasRunStarted();
+		String startTime = keywordInfo.getKeywordInfo().getStartTimer();
+		
+		//If there is not start timer on the task a regular launch should happen other timer task should be started
+		if (startTimer == false){
+				//Check which mode should be running based on task information
+				if (supremeTask.getItems().toString().contains("Browser")) {
+					//Iterate through the table, create a thread and pass in task information from each row
+					for (SupremeTask task :supremeTask.getItems()) {
+						Thread taskInformation  = new Thread(new Selenium(passableController, supremeTask.getItems().size() + 1 ,task.getIem().toString(), task.getSize(), task.getCategory(), task.getColour(), task.getBillingProfile()));
+						this.threads.add(taskInformation);
+					}
+				} else if (supremeTask.getItems().toString().contains("Request")) {
+					for (SupremeTask task :supremeTask.getItems()) {
+						Thread taskInformation  = new Thread(new Request(passableController, supremeTask.getItems().size() + 1 ,task.getIem().toString(), task.getSize(), task.getCategory(), task.getColour(), task.getBillingProfile()));
+						this.threads.add(taskInformation);
+					}
+				}
+		
+				//Start the threads one by one
+				for (Iterator<Thread> itr = threads.listIterator(); itr.hasNext();) {
+		            Thread thread = itr.next();
+		            thread.start();
+		        }
+				
+				//Clear the threads for the next run
+				threads.clear();
+			
+		} else if (startTimer == true ) {
+				DateFormat year = new SimpleDateFormat("yyyy-MM-dd ");
+				Date yearDate = new Date();
+				System.out.println(year.format(yearDate)); //2016/11/16 12:08:43 -- TEST
+				
+				DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date = dateFormatter.parse(year.format(yearDate) + startTime);
+				
+				Timer timer = new Timer();
+				timer.schedule(new schedulerDispatch(), date);
+				this.consoleWriter("[" + new SimpleDateFormat("HH:mm:ss:SS").format(new Date()) + "] - " + "Tasks - Waiting for countdown: " + date + "\n");
+		}
+		
+		//Change column status to 'running'
+		if (startTimer == true) {
+			statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStartTimerProperty());
+			statusColumn.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+			supremeTask.refresh();
+		} else if (startTimer == false) {
+			statusColumn.setCellValueFactory(cellData -> cellData.getValue().getStatusRunningProperty());
+			statusColumn.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
+			supremeTask.refresh();
+		}
+	}
+	
+	
+	//Method for timed tasks
+	public class schedulerDispatch extends TimerTask {
+		public void run() {
+			if (supremeTask.getItems().toString().contains("Browser")) {
+				for (SupremeTask task :supremeTask.getItems()) {
+					Thread taskInformation  = new Thread(new Selenium(passableController, supremeTask.getItems().size() + 1 ,task.getIem().toString(), task.getSize(), task.getCategory(), task.getColour(), task.getBillingProfile()));
+					threads.add(taskInformation);
+				}
+			} else if (supremeTask.getItems().toString().contains("Requests")) {
+				for (SupremeTask task :supremeTask.getItems()) {
+					Thread taskInformation  = new Thread(new Request(passableController, supremeTask.getItems().size() + 1 ,task.getIem().toString(), task.getSize(), task.getCategory(), task.getColour(), task.getBillingProfile()));
+					threads.add(taskInformation);
+				}						
+			}
+			
+			for (Iterator<Thread> itr = threads.listIterator(); itr.hasNext();) {
+	            Thread thread = itr.next();
+	            thread.start();
+	        }
+			
+			//Clear the threads for the next run
+			threads.clear();
 		}
 	}
 	
