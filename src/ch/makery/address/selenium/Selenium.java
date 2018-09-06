@@ -29,17 +29,18 @@ import org.openqa.selenium.support.ui.Select;
 import ch.makery.address.model.keywordInfo;
 import ch.makery.address.view.SupremeBotOverviewController;
 
-public class Selenium {
+public class Selenium implements Runnable {
 
+	private int taskNumber;
 	private String mainURL = "https://www.supremenewyork.com/shop/all/";
 	private String checkoutURL = "https://www.supremenewyork.com/checkout";
 	private HashMap<String, String> attributes = new HashMap<String, String>();
 	private String finalURL = null;
-	private String keyword = keywordInfo.getKeywordInfo().getKeyword();
-	private String size = keywordInfo.getKeywordInfo().getSize();
-	private String category = keywordInfo.getKeywordInfo().getCatagory();
-	private String color = keywordInfo.getKeywordInfo().getColor();
-	private String profileLoader = keywordInfo.getKeywordInfo().getProfileLoader();
+	private String keyword;
+	private String size;
+	private String category;
+	private String color;
+	private String profileLoader;
 	private String PROXY = "http://" + keywordInfo.getKeywordInfo().getProxy();
 
 	// Import Billing Info Details from saved model(Person)
@@ -67,13 +68,20 @@ public class Selenium {
 	private PrintWriter printWriter;
 
 	
-	public Selenium(SupremeBotOverviewController controller) {
+	public Selenium(SupremeBotOverviewController controller, int taskNumber, String keyword, String size, String category, String color, String profileLoader) {
 		this.controller = controller;
+		this.taskNumber = taskNumber;
+		this.keyword = keyword;
+		this.size = size;
+		this.category = category;
+		this.color = color;
+		this.profileLoader = profileLoader;
 	}
 	
 	public  void main(String[] args) throws InterruptedException, IOException, ParseException {
 			this.fullRun();
 	}
+	
 	
 	
 	public void fullRun() throws IOException, InterruptedException, ParseException {
@@ -82,6 +90,8 @@ public class Selenium {
 			 * = new ChromeOptions(); headless.addArguments("--headless"); WebDriver driver
 			 * = new ChromeDriver(headless);
 			 *****************************************************/
+		
+		controller.setBrowserMode(this);
 		
 		//Create Log File
 		try (Writer file = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/" + "/Log_Task_" + "1" + ".txt")) {
@@ -227,7 +237,7 @@ public class Selenium {
 				//Check T&C box
 			//	WebElement element = driver.findElement(By.xpath("//*[@id=\"cart-cc\"]/fieldset/p/label/div/ins"));
 			//	js.executeScript("arguments[0].click();", element);
-				js.executeScript("document.getElementByClassName('order[terms]').setAttribute('selected', 'selected')");
+			//	js.executeScript("document.getElementByClassName('order[terms]').setAttribute('selected', 'selected')");
 				billing_name_js.executeScript("document.getElementById('order_billing_name').setAttribute('value', 'John Doe')");
 				order_email_js.executeScript("document.getElementById('order_email').setAttribute('value', 'johndoe@gmail.com')");
 				order_tel_js.executeScript("document.getElementById('order_tel').setAttribute('value', '07899608391')");
@@ -312,7 +322,7 @@ public class Selenium {
 			int statusCode = response.statusCode();
 			
 			if (statusCode == 404) {
-				driver.close();
+				driver.quit();
 			}
 			
 			//Connect to requested webpage if errors are clear
@@ -354,6 +364,16 @@ public class Selenium {
 	        e.printStackTrace();
 	        driver.quit();
 	    }
+	}
+
+	@Override
+	public void run() {
+		try {
+			this.main(null);
+		} catch (IOException | InterruptedException | ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
