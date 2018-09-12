@@ -205,6 +205,61 @@ public class MainApp extends Application {
 
 	}
 	
+	public void showAboutWindow() {
+		String information = "Version: 1.4.0.0";
+		String updates = 
+				  "\n+ Added start and top buttons for individual tasks "
+				+ "\n+ Added action column "
+				+ "\n+ New About window dialog showing updates and version info "
+				+ "\n+ Delete a row by double clicking "
+				+ "\n+ Fixed log output for each task "
+				+ "\n+ Added slider for theme switcher";
+				
+		
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("About");
+		alert.setHeaderText("Information");
+		alert.setContentText(information);
+		
+		ButtonType resetTimer = new ButtonType("Twitter");
+		alert.getDialogPane().getButtonTypes().add(resetTimer);
+		
+		Button resetTimerBtn = (Button) alert.getDialogPane().lookupButton(resetTimer);
+		resetTimerBtn.addEventFilter(ActionEvent.ACTION, event -> 
+			getHostServices().showDocument("https://twitter.com/DrExpresso")
+		);
+		
+		ButtonType github = new ButtonType("Github");
+		alert.getDialogPane().getButtonTypes().add(github);
+		
+		Button githutBtn = (Button) alert.getDialogPane().lookupButton(github);
+		githutBtn.addEventFilter(ActionEvent.ACTION, event -> 
+			getHostServices().showDocument("https://github.com/DrExpresso/SupremeAIO")
+		);
+		
+		Label label = new Label("Updates:");
+
+		TextArea textArea = new TextArea(updates);
+		textArea.setEditable(false);
+		textArea.setWrapText(true);
+
+		textArea.setMaxWidth(Double.MAX_VALUE);
+		textArea.setMaxHeight(Double.MAX_VALUE);
+		GridPane.setVgrow(textArea, Priority.ALWAYS);
+		GridPane.setHgrow(textArea, Priority.ALWAYS);
+
+		GridPane expContent = new GridPane();
+		expContent.setMaxWidth(Double.MAX_VALUE);
+		expContent.add(label, 0, 0);
+		expContent.add(textArea, 0, 1);
+
+		// Set expandable Exception into the dialog pane.
+		alert.getDialogPane().setExpandableContent(expContent);
+
+		alert.showAndWait();
+
+	}
+	
 	//Keyword help
 	public void keywordDialog() throws FileNotFoundException {
 		try {
