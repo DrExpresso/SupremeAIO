@@ -1,7 +1,7 @@
 # SupremeAIO
 All in one checkout Tool request and browser based with multi-threading to automate checking out products on supremenewyork. [My Twitter for any inquiries](https://twitter.com/DrExpresso). **PLEASE RUN BOT AS ADMINISTRATOR**
 
-![alt text](https://github.com/DrExpresso/SupremeAIO/blob/master/SupremeAIO_1.PNG)
+![alt text](https://github.com/DrExpresso/SupremeAIO/blob/master/template.PNG)
 
 <img src="https://github.com/DrExpresso/SupremeAIO/blob/master/bot.gif?raw=true" width="auto" height="auto" />
 
