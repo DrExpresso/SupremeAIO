@@ -227,7 +227,7 @@
     -fx-background-color: transparent;
 }
 
-/* Spaltenköpfe
+/* SpaltenkÃ¶pfe
     Struktur column-header-background -> column-header */
 
 .table-view .column-header-background{
@@ -286,4 +286,3 @@
     -fx-padding: 0;
     -fx-shape: null;
 }
-
