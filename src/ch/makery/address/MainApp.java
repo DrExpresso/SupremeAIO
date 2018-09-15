@@ -262,39 +262,18 @@ public class MainApp extends Application {
 	}
 	
 	public void showImageScraperDialog() throws FileNotFoundException {
-		try {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("view/ImageScraperOverview.fxml"));
-			AnchorPane page = (AnchorPane) loader.load();
-
-			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Image Scraper");
-			dialogStage.initModality(Modality.NONE);
-			String css = this.getClass().getResource("/css/ClearTheme.css").toExternalForm();
-			dialogStage.initOwner(primaryStage);
-			Scene scene = new Scene(page);
-			scene.getStylesheets().add(css);
-
-			ImageScrapperController controller = loader.getController();
-			controller.setMainApp(this);
-
-			
-			
-			dialogStage.setScene(scene);
-			dialogStage.show();
-			
-			
-		} catch (IOException e) {
-			e.printStackTrace();
+		ImageScrapperController controller = new ImageScrapperController();
 		
-			StringWriter sw = new StringWriter();
-			PrintWriter pw = new PrintWriter(sw);
-			e.printStackTrace(pw);
-			String exceptionText = sw.toString();
-			    
-			this.errorStackTraceDialog("Stacktrace error see log", exceptionText);
-			    
-		}
+		Stage dialogStage = new Stage();
+		dialogStage.setTitle("Keywords");
+		dialogStage.initModality(Modality.NONE);
+		dialogStage.getIcons().add(
+				new Image("file:" + System.getProperty("user.dir") + "/resources/images/" + "keyword.ico"));
+		String css = this.getClass().getResource("/css/ClearTheme.css").toExternalForm();
+		dialogStage.initOwner(primaryStage);
+		
+		
+		controller.start(dialogStage);
 	}
 	
 	//Keyword help
