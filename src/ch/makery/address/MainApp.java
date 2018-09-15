@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import ch.makery.address.model.SupremeTask;
 import ch.makery.address.model.keywordInfo;
+import ch.makery.address.view.ImageScrapperController;
 import ch.makery.address.view.ProfileCreatorController;
 import ch.makery.address.view.SupremeBotOverviewController;
 import ch.makery.address.view.keywordController;
@@ -258,6 +259,42 @@ public class MainApp extends Application {
 
 		alert.showAndWait();
 
+	}
+	
+	public void showImageScraperDialog() throws FileNotFoundException {
+		try {
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource("view/ImageScraperOverview.fxml"));
+			AnchorPane page = (AnchorPane) loader.load();
+
+			Stage dialogStage = new Stage();
+			dialogStage.setTitle("Image Scraper");
+			dialogStage.initModality(Modality.NONE);
+			String css = this.getClass().getResource("/css/ClearTheme.css").toExternalForm();
+			dialogStage.initOwner(primaryStage);
+			Scene scene = new Scene(page);
+			scene.getStylesheets().add(css);
+
+			ImageScrapperController controller = loader.getController();
+			controller.setMainApp(this);
+
+			
+			
+			dialogStage.setScene(scene);
+			dialogStage.show();
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			e.printStackTrace(pw);
+			String exceptionText = sw.toString();
+			    
+			this.errorStackTraceDialog("Stacktrace error see log", exceptionText);
+			    
+		}
 	}
 	
 	//Keyword help
