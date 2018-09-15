@@ -1,20 +1,40 @@
 .table-row {
     -fx-background-color:#F7F7F7;
-    -fx-background-radius: 20;
-     -fx-alignment: center;
+    -fx-background-radius: 20px;
       -fx-border-color: white;
-      -fx-alignment: CENTER;
+       -fx-cursor: hand;
+      
+}
+
+.table-view .table-row:hover {
+   -fx-cursor: hand;
 }
 
 .table-view .column-header .label {
     -fx-font-size: 10pt;
     -fx-font-family: "Segoe UI";
     -fx-text-fill: black;
-    -fx-alignment: center;
     -fx-opacity: 1;
     
 }
 
+.table-view .table-cell {
+    -fx-alignment: CENTER;
+    
+
+}
+
+
+
+.text-field .text {
+    -fx-background-color:#F7F7F7;
+    -fx-background-radius: 20;
+     -fx-alignment: center;
+      -fx-border-color: white;
+      -fx-alignment: CENTER;
+      -fx-background-radius: 20;
+      -fx-prompt-text-fill: #F7F7F7;
+}
 
 .table-row-cell:empty {
     -fx-background-color: transparent;
@@ -41,7 +61,7 @@
     -fx-background-radius: 20;
      -fx-alignment: center;
       -fx-background: #F9F9F9;
-       -fx-border-color: white;
+      
 }
 
 .table-column {
@@ -82,4 +102,14 @@
     -fx-background-color: transparent;
     -fx-background-radius: 20;
     -fx-alignment: CENTER;
+}
+
+.table-row-cell:filled:selected {
+  -fx-background: #F7F7F7 ;
+  -fx-background-color: #F7F7F7, #F7F7F7 ;
+  -fx-background-insets: 0, 0 0 1 0 ;
+  -fx-table-cell-border-color: derive(-fx-color, 5%);
+}
+.table-row-cell:odd:filled:selected {
+  -fx-background: #F7F7F7 ;
 }
