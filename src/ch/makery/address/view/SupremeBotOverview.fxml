@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="615.0" prefWidth="1115.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.SupremeBotOverviewController">
+<AnchorPane prefHeight="655.0" prefWidth="1290.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ch.makery.address.view.SupremeBotOverviewController">
    <children>
       <BorderPane prefHeight="615.0" prefWidth="1115.0" styleClass="background" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -40,8 +40,13 @@
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#handleKeywordWindow" text="Keywords" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleAboutWindow" text="About" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Image Scraper">
+                     <items>
+                        <MenuItem mnemonicParsing="false" onAction="#handleImageScraper" text="Unspecified Action" />
+                     </items></Menu>
                   <Menu mnemonicParsing="false" text="Theme">
                      <items>
                         <MenuItem mnemonicParsing="false" onAction="#toggleDarkTheme" text="Dark Theme" />
@@ -69,9 +74,9 @@
                            <bottom>
                               <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                  <center>
-                                    <TextArea fx:id="console" editable="false" focusTraversable="false" pickOnBounds="false" prefHeight="143.0" prefWidth="348.0" promptText="console log" BorderPane.alignment="CENTER">
+                                    <TextArea fx:id="console" editable="false" focusTraversable="false" pickOnBounds="false" prefHeight="147.0" prefWidth="348.0" promptText="console log" BorderPane.alignment="CENTER">
                                        <BorderPane.margin>
-                                          <Insets bottom="64.0" left="10.0" right="10.0" top="5.0" />
+                                          <Insets bottom="30.0" left="10.0" right="10.0" top="5.0" />
                                        </BorderPane.margin>
                                     </TextArea>
                                  </center>
@@ -255,9 +260,9 @@
                         </BorderPane>
                      </children>
                   </VBox>
-                  <VBox prefHeight="596.0" prefWidth="740.0">
+                  <VBox prefHeight="616.0" prefWidth="915.0">
                      <children>
-                        <BorderPane prefHeight="596.0" prefWidth="428.0">
+                        <BorderPane prefHeight="627.0" prefWidth="911.0">
                            <top>
                               <ImageView fitHeight="37.0" fitWidth="196.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
                                  <BorderPane.margin>
@@ -269,7 +274,7 @@
                               </ImageView>
                            </top>
                            <bottom>
-                              <GridPane hgap="10.0" prefHeight="46.0" prefWidth="740.0" BorderPane.alignment="CENTER">
+                              <GridPane hgap="10.0" prefHeight="26.0" prefWidth="825.0" BorderPane.alignment="CENTER">
                                 <columnConstraints>
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -278,9 +283,9 @@
                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                                 </columnConstraints>
                                 <rowConstraints>
-                                  <RowConstraints maxHeight="31.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
-                                  <RowConstraints maxHeight="41.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                                  <RowConstraints maxHeight="20.0" minHeight="10.0" prefHeight="11.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="35.0" minHeight="6.0" prefHeight="35.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="41.0" minHeight="0.0" prefHeight="2.0" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="20.0" minHeight="8.0" prefHeight="8.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
                                     <Button fx:id="startTasks" mnemonicParsing="false" onAction="#createTask" prefHeight="25.0" prefWidth="96.0" text="Start All" GridPane.columnIndex="1" GridPane.rowIndex="1" />
@@ -288,7 +293,7 @@
                                     <Button mnemonicParsing="false" onAction="#clearAllTasks" prefHeight="25.0" prefWidth="94.0" text="Clear" GridPane.columnIndex="3" GridPane.rowIndex="1" />
                                     <Button mnemonicParsing="false" onAction="#handleRecaptchaWindow" prefHeight="25.0" prefWidth="39.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                        <GridPane.margin>
-                                          <Insets left="80.0" />
+                                          <Insets left="135.0" />
                                        </GridPane.margin>
                                        <graphic>
                                           <ImageView fitHeight="22.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
@@ -305,19 +310,22 @@
                               </GridPane>
                            </bottom>
                            <center>
-                              <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+                              <VBox prefHeight="539.0" prefWidth="825.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <TableView fx:id="supremeTask" fixedCellSize="0.0" prefHeight="467.0" prefWidth="736.0">
+                                    <TableView fx:id="supremeTask" fixedCellSize="0.0" prefHeight="504.0" prefWidth="911.0">
                                        <VBox.margin>
                                           <Insets top="16.0" />
                                        </VBox.margin>
                                        <columns>
-                                          <TableColumn fx:id="idColumn" editable="false" prefWidth="41.0" resizable="false" text="ID" />
-                                          <TableColumn fx:id="itemColumn" editable="false" prefWidth="163.0" resizable="false" text="ITEM" />
-                                          <TableColumn fx:id="billingColumn" editable="false" prefWidth="144.0" resizable="false" text="BILLING PROFILE" />
-                                          <TableColumn fx:id="proxyColumn" editable="false" minWidth="6.0" prefWidth="117.0" resizable="false" text="PROXY" />
-                                          <TableColumn fx:id="modeColumn" editable="false" minWidth="6.0" prefWidth="96.0" resizable="false" text="MODE" />
-                                          <TableColumn fx:id="statusColumn" editable="false" minWidth="0.0" prefWidth="173.0" resizable="false" text="STATUS" />
+                                          <TableColumn fx:id="idColumn" editable="false" prefWidth="41.0" resizable="false" sortable="false" text="ID" />
+                                          <TableColumn fx:id="itemColumn" editable="false" prefWidth="163.0" resizable="false" sortable="false" text="ITEM" />
+                                          <TableColumn fx:id="categoryColumn" editable="false" prefWidth="75.0" sortable="false" text="CATEGORY" />
+                                          <TableColumn fx:id="sizeColumn" editable="false" prefWidth="75.0" sortable="false" text="SIZE" />
+                                          <TableColumn fx:id="colourColumn" editable="false" prefWidth="75.0" sortable="false" text="COLOUR" />
+                                          <TableColumn fx:id="billingColumn" editable="false" prefWidth="135.0" resizable="false" sortable="false" text="BILLING PROFILE" />
+                                          <TableColumn fx:id="modeColumn" editable="false" minWidth="6.0" prefWidth="87.0" resizable="false" sortable="false" text="MODE" />
+                                          <TableColumn fx:id="statusColumn" editable="false" minWidth="0.0" prefWidth="154.0" resizable="false" sortable="false" text="STATUS" />
+                                          <TableColumn fx:id="actionColumn" prefWidth="105.0" text="ACTION" />
                                        </columns>
                                     </TableView>
                                  </children>
