@@ -18,13 +18,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.makery.address.model.keywordInfo;
 import ch.makery.address.view.SupremeBotOverviewController;
 
-public class Request {
+public class Request implements Runnable {
 	
 	//Main bot overview controller
 	private final SupremeBotOverviewController controller;
+	
+	//Task variables
+	private int taskNumber;
+	private String keyword;
+	private String size;
+	private String category;
+	private String color;
+	private String profileLoader;
 	
 	//Printer Writer for log text file, declared globally so other methods can use them
 	private PrintWriter printWriter;
@@ -35,20 +42,32 @@ public class Request {
 	//Variables
 	private final String mainShop = "http://www.supremenewyork.com";
 	private final String mobile_stock = "http://www.supremenewyork.com/mobile_stock.json";
-	
-	private String category = keywordInfo.getKeywordInfo().getCatagory();
-	private String keyword = keywordInfo.getKeywordInfo().getKeyword();
-	private String size = keywordInfo.getKeywordInfo().getSize();
-	private String color = keywordInfo.getKeywordInfo().getColor();
-	
+
+	//Variants from product data
 	private String keywordProductID;
 	private String keyword_style_colour;
 	private String keyword_size;
 
 	
-	//Get the reference for the main controller and store it in a variable
-	public Request(SupremeBotOverviewController controller) {
+	//Get the references from the main controller and store into variables
+	public Request(SupremeBotOverviewController controller, int taskNumber, String keyword, String size, String category, String color, String profileLoader) {
 		this.controller = controller;
+		this.taskNumber = taskNumber;
+		this.keyword = keyword;
+		this.size = size;
+		this.category = category;
+		this.color = color;
+		this.profileLoader = profileLoader;
+	}
+	
+	//Run this thread using Runnable interface
+	@Override
+	public void run() {
+		try {
+			this.main(null);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 	}
 	
 
