@@ -1,8 +1,10 @@
 package ch.makery.address.selenium;
 
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -93,17 +95,27 @@ public class Selenium implements Runnable {
 		
 		controller.setBrowserMode(this);
 		
+		String fileName;
+		
 		//Create Log File
-		try (Writer file = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/" + "/Log_Task_" + "1" + ".txt")) {
+		try (Writer file = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/" + "[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task= " +taskNumber+".txt")) {
+			fileName = file.toString();
 			file.flush();
-			controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Successfully created log file \n");
+			//controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Successfully created log file \n");
 		}
 		
+		File f = new File(System.getProperty("user.dir")+ "/resources/Logs/");
+		File[] matchingFiles = f.listFiles(new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return name.contains(fileName);
+			}
+		});
+		
 		//Start the print writer to Log to the file
-		FileWriter rawLogOutput = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/Log_Task_1.txt");
+		FileWriter rawLogOutput = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/"+matchingFiles.toString());
 		printWriter = new PrintWriter(rawLogOutput);
 		
-		printWriter.println("LOG [TASK: " + "1 -- " +  " Time: " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "]");
+		printWriter.println("LOG [TASK: " + taskNumber + " -- " +  " Time: " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "]");
 		printWriter.println();
 		
 		controller.statusColumnUpdateRunning();
@@ -142,15 +154,16 @@ public class Selenium implements Runnable {
 					this.keywordFinder();
 					controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! Retrying!  \n");
 			} catch (WebDriverException e) {
+				controller.statusColumnUpdateError();
 				controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! \n");
-				controller.statusColumnUpdateItemNotFound();
 				driver.close();
-				Thread.currentThread().stop();
+				Thread.currentThread().interrupt();
 			}
 				
 
 			//Error handler
 			if (driver.getCurrentUrl() == null) {
+				controller.statusColumnUpdateError();
 				driver.quit();
 			}
 
@@ -159,8 +172,9 @@ public class Selenium implements Runnable {
 			try {
 				driver.get(finalURL);
 			} catch (WebDriverException e) {
+				controller.statusColumnUpdateError();
 				driver.close();
-				Thread.currentThread().stop();
+				Thread.currentThread().interrupt();
 			}
 			
 			controller.statusColumnUpdateItemFound();
@@ -322,6 +336,7 @@ public class Selenium implements Runnable {
 			int statusCode = response.statusCode();
 			
 			if (statusCode == 404) {
+				controller.statusColumnUpdateError();
 				driver.quit();
 			}
 			
@@ -344,7 +359,7 @@ public class Selenium implements Runnable {
 				}
 			} catch (WebDriverException e) {
 				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! Retrying!");
-				controller.statusColumnUpdateItemNotFound();
+				controller.statusColumnUpdateError();
 			}
 	
 			// Get the URL from the HashMap, clean it and save it in finalURL
@@ -355,13 +370,16 @@ public class Selenium implements Runnable {
 			}
 			//Catch any errors to quite the chrome driver
 		} catch (NullPointerException e) {
-	        e.printStackTrace();
+			controller.statusColumnUpdateError();
+			e.printStackTrace();
 	        driver.quit();
 	    } catch (HttpStatusException e) {
+	    	controller.statusColumnUpdateError();
 	        e.printStackTrace();
 	        driver.quit();
 	    } catch (IOException e) {
 	        e.printStackTrace();
+	        controller.statusColumnUpdateError();
 	        driver.quit();
 	    }
 	}
@@ -371,7 +389,7 @@ public class Selenium implements Runnable {
 		try {
 			this.main(null);
 		} catch (IOException | InterruptedException | ParseException e) {
-			// TODO Auto-generated catch block
+		    controller.statusColumnUpdateError();
 			e.printStackTrace();
 		}
 	}
