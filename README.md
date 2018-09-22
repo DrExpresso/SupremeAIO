@@ -8,6 +8,7 @@ All in one checkout Tool request and browser based with multi-threading to autom
 
 
 [DOWNLOAD LINK](https://github.com/DrExpresso/SupremeAIO/releases)
+[DOCUMENTATION LINK](https://drive.google.com/file/d/15v1hTzGvnKBL-A-k81Tk3EI5DmECQIs0/view?usp=sharing)
 
 
 # Requirements
@@ -22,7 +23,7 @@ All in one checkout Tool request and browser based with multi-threading to autom
 - **Task Creator** - Create tasks in quick succession to setup 5 minutes before the drop.
 
 # Todo
-- [ ] **Documentation**
+- [x] **Documentation**
 - [x] **Checkout delay**
 - [x] **Google Sign in Support**
 - [x] **Working console log**
@@ -48,6 +49,7 @@ All in one checkout Tool request and browser based with multi-threading to autom
 > - Download and **run the exe file as Administrator**, installer will automatically extract and install files to your local C drive in program files. Application is 32 bit. If you need any help contact my [Twitter](https://twitter.com/DrExpresso).
 
 # Usage
+[DOCUMENTATION LINK](https://drive.google.com/file/d/15v1hTzGvnKBL-A-k81Tk3EI5DmECQIs0/view?usp=sharing)
 After installation you want to load the bot up and add your billing information under File > Profile Editor. 
 
 Then you can set up a task on  left panel of the main bot. Keywords should be whole separated with spaces, no commas or 
