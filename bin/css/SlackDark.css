@@ -1,0 +1,87 @@
+.root {
+	-fx-background-image: url("../resources/images/slackBackground.png");
+	-fx-background-repeat: no-repeat;
+  	-fx-background-position: bottom left;
+  	-fx-background-color:#1d1d1d;
+}
+
+.text-field {
+  -fx-border-radius: 10 10 10 10;
+  -fx-background-radius: 10 10 10 10;
+
+  /* top-left, top-right, bottom-right, and bottom-left corners, in that 
+  order. */
+ }
+ 
+ .button {
+	 -fx-cursor: hand;
+}
+ 
+ .label {
+ 	-fx-text-fill: #2b4cff;
+ 	-fx-font-weight: bold;
+  	-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );  
+ }
+ 
+ .button {
+    -fx-background-radius: 0;
+     -fx-border-color: white, white;
+    -fx-background-color: #1d1d1d;
+    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-size: 10pt;
+    -fx-text-fill: #d8d8d8;
+    -fx-background-insets: 0 0 0 0, 0, 1, 2;
+}
+
+.button:hover {
+    -fx-background-color: #3a3a3a;
+}
+
+.button:pressed, .button:default:hover:pressed {
+  -fx-background-color: white;
+  -fx-text-fill: #1d1d1d;
+}
+
+.button:focused {
+    -fx-border-color: white, white;
+    -fx-border-width: 1, 1;
+    -fx-border-style: solid, segments(1, 1);
+    -fx-border-radius: 0, 0;
+    -fx-border-insets: 1 1 1 1, 0;
+}
+
+.button:disabled, .button:default:disabled {
+    -fx-opacity: 0.4;
+    -fx-background-color: #1d1d1d;
+    -fx-text-fill: white;
+}
+
+.button:default {
+    -fx-background-color: -fx-focus-color;
+    -fx-text-fill: #ffffff;
+}
+
+.button:default:hover {
+    -fx-background-color: derive(-fx-focus-color,30%);
+}
+
+
+.text-field {
+    -fx-background-color: #a9a9a9 , #1d1d1d , #1d1d1d;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+    -fx-border-top-left-radius: 10px; 
+    -fx-border-top-right-radius: 10px; 
+      -fx-text-fill: white;
+}
+
+
+.text-field .text {
+    -fx-text-fill: white;
+}
+
+.text-field:focused {
+    -fx-background-color: #ff4c4c , #1d1d1d , #1d1d1d;
+    -fx-background-insets: 0 -1 -1 -1, 0 0 0 0, 0 -1 3 -1;
+    -fx-border-top-left-radius: 10px; 
+    -fx-border-top-right-radius: 10px; 
+}

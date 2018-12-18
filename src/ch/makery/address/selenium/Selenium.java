@@ -1,68 +1,124 @@
 package ch.makery.address.selenium;
 
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.jsoup.Connection;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.Proxy;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.Select;
-import ch.makery.address.model.Person;
+
 import ch.makery.address.model.keywordInfo;
 import ch.makery.address.view.SupremeBotOverviewController;
 
-public class Selenium {
+public class Selenium implements Runnable {
 
-	public final static Selenium selenium = new Selenium();
+	private int taskNumber;
 	private String mainURL = "https://www.supremenewyork.com/shop/all/";
 	private String checkoutURL = "https://www.supremenewyork.com/checkout";
 	private HashMap<String, String> attributes = new HashMap<String, String>();
 	private String finalURL = null;
-	private String keyword = keywordInfo.getKeywordInfo().getKeyword();
-	private String size = keywordInfo.getKeywordInfo().getSize();
-	private String category = keywordInfo.getKeywordInfo().getCatagory();
-	private String color = keywordInfo.getKeywordInfo().getColor();
+	private String keyword;
+	private String size;
+	private String category;
+	private String color;
+	private String profileLoader;
 	private String PROXY = "http://" + keywordInfo.getKeywordInfo().getProxy();
 
 	// Import Billing Info Details from saved model(Person)
-	private String billingFirstName = Person.getPersonInfo().getFullName();
-	private String billingEmail = Person.getPersonInfo().getEmail();
-	private String telephone = Person.getPersonInfo().getTelephone();
-	private String billingAddress = Person.getPersonInfo().getAddress();
-	private String billingCity = Person.getPersonInfo().getCity();
-	private String billingPostcode = Person.getPersonInfo().getPostcode();
-	private String cardNumber = Person.getPersonInfo().getCardNumber();
-	private String cardCvv = Person.getPersonInfo().getCvv();
+	private String billingFirstName;
+	private String billingEmail;
+	private String telephone;
+	private String billingAddress;
+	private String billingCity;
+	private String billingPostcode;
+	private String country;
+	private String cardType;
+	private String cardNumber;
+	private String cardExpiry;
+	private String cardYear;
+	private String cardCvv;
+	
+	
 	public ChromeDriver driver;
-
-	
 	private int retryCounter = 10;
+	private int checkoutDelay = keywordInfo.getKeywordInfo().getCheckoutDelay();
 	
-	public static Selenium getTesting() {
-		return selenium;
-	}
+	private SupremeBotOverviewController controller;
 	
-	public static void main(String[] args) throws InterruptedException, IOException {
-			Selenium testrun = new Selenium();
-			testrun.fullRun();
-	}
+	//Console Objects
+	private PrintWriter printWriter;
 
-	public void fullRun() throws IOException, InterruptedException {
+	
+	public Selenium(SupremeBotOverviewController controller, int taskNumber, String keyword, String size, String category, String color, String profileLoader) {
+		this.controller = controller;
+		this.taskNumber = taskNumber;
+		this.keyword = keyword;
+		this.size = size;
+		this.category = category;
+		this.color = color;
+		this.profileLoader = profileLoader;
+	}
+	
+	public  void main(String[] args) throws InterruptedException, IOException, ParseException {
+			this.fullRun();
+	}
+	
+	
+	
+	public void fullRun() throws IOException, InterruptedException, ParseException {
 			/*****************************************************
 			 * Headless property -- Uncomment to use headless browser ChromeOptions headless
 			 * = new ChromeOptions(); headless.addArguments("--headless"); WebDriver driver
 			 * = new ChromeDriver(headless);
 			 *****************************************************/
-
+		
+		controller.setBrowserMode(this);
+		
+		String fileName;
+		
+		//Create Log File
+		try (Writer file = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/" + "[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task= " +taskNumber+".txt")) {
+			fileName = file.toString();
+			file.flush();
+		}
+		
+		File f = new File(System.getProperty("user.dir")+ "/resources/Logs/");
+		File[] matchingFiles = f.listFiles(new FilenameFilter() {
+			public boolean accept(File dir, String name) {
+				return name.contains(fileName);
+			}
+		});
+		
+		//Start the print writer to Log to the file
+		FileWriter rawLogOutput = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/"+matchingFiles.toString());
+		printWriter = new PrintWriter(rawLogOutput);
+		
+		printWriter.println("LOG [TASK: " + taskNumber + " -- " +  " Time: " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "]");
+		printWriter.println();
+		
+		controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Running");
+				
 			//PROXY -- IP Authentication only 
 			ChromeOptions options = new ChromeOptions();		
 //			
@@ -82,7 +138,6 @@ public class Selenium {
 //			//	System.out.println(PROXY.toString() + keywordInfo.getKeywordInfo().getProxy().toString());
 //			//-----------------------------------------//
 //			}
-			//System.setProperty("webdriver.chrome.driver", "C://Users//Prati//Documents//eclipse-workspace//Projects//SupremeAIO//resources/chromedriver.exe");
 			
 	         System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+ "/resources/" +"/chromedriver.exe");
 
@@ -90,40 +145,71 @@ public class Selenium {
 			// Create a new instance of the Chrome driver
 			driver = new ChromeDriver(options);
 		
-			JavascriptExecutor js = (JavascriptExecutor) driver;
 
 			//Launch method for finding keyword
+		
+		try {
 			this.keywordFinder();
+			controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task " + taskNumber +  " - Item Not Found! Retrying!  \n");
+		} catch (WebDriverException e) {
+			controller.statusColumnUpdateError();
+			controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task " + taskNumber +  " - Item Not Found! \n");
+			driver.close();
+			Thread.currentThread().interrupt();
+		}
+				
 
 			//Error handler
 			if (driver.getCurrentUrl() == null) {
+				controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Error occurred");
 				driver.quit();
 			}
 
 			//
-			driver.get(finalURL);
+
+			try {
+				driver.get(finalURL);
+			} catch (WebDriverException e) {
+				controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Error occurred");
+				driver.close();
+				Thread.currentThread().interrupt();
+			}
 			
-		
+			controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Item Found");
+			controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task " + taskNumber + " - Item Found \n");
+			
+			
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			JavascriptExecutor billing_name_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_email_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_tel_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_address_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_postcode_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_city_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_card_js = (JavascriptExecutor) driver;
+			JavascriptExecutor order_cvv_js = (JavascriptExecutor) driver;
 			
 
 			// Select Size and add to cart
-			WebElement mySelectElement = driver.findElement(By.name("size"));
+			WebElement mySelectElement = driver.findElement(By.xpath("//*[@id=\"size\"]"));
 			Select dropdown = new Select(mySelectElement);
 			
-			if (dropdown.getOptions().contains(size)) {
-				System.out.println("Size found");
+			
+			
+			if (dropdown.getOptions() != null) {
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Size found");
 				dropdown.selectByVisibleText(size);
 				driver.findElement(By.name("commit")).click();
-				System.out.println("Cart successfull!");
+				controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Adding to cart...");
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Cart successful!");
 			} else {
 				for (int i = 0; i < retryCounter; i++) {
-					System.out.println("Size not Found");
-					System.out.println("Retrying in  3 seconds");
+					printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Size not Found... Retrying in  3 seconds");
+					controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task " + taskNumber  + " - Size not Found... Retrying in  3 seconds \n");
 					Thread.sleep(3000);
 					driver.navigate().refresh();
 				}
 			}
-		
 			
 			//Sleep incase the add to cart is not detected
 			Thread.sleep(1000);
@@ -135,27 +221,96 @@ public class Selenium {
 			String checkoutUrl = driver.getCurrentUrl();
 
 			if (checkoutUrl.contains("checkout")) {
-				System.out.println("Checking out");
-				WebElement fullname = driver.findElement(By.id("order_billing_name"));
-				js.executeScript("arguments[0].value='" + billingFirstName + "';", fullname);
-				WebElement email = driver.findElement(By.id("order_email"));
-				js.executeScript("arguments[0].value='" + billingEmail + "';", email);
-				WebElement tel = driver.findElement(By.id("order_tel"));
-				js.executeScript("arguments[0].value='" + telephone + "';", tel);
-				WebElement address = driver.findElement(By.id("bo"));
-				js.executeScript("arguments[0].value='" + billingAddress + "';", address);
-				WebElement city = driver.findElement(By.id("order_billing_city"));
-				js.executeScript("arguments[0].value='" + billingCity + "';", city);
-				WebElement postcode = driver.findElement(By.id("order_billing_zip"));
-				js.executeScript("arguments[0].value='" + billingPostcode + "';", postcode);
-				WebElement number = driver.findElement(By.id("cnb"));
-				js.executeScript("arguments[0].value='" + cardNumber + "';", number);
-				WebElement cvv = driver.findElement(By.id("vval"));
-				js.executeScript("arguments[0].value='" + cardCvv + "';", cvv);
-				driver.findElement(By.className("iCheck-helper")).click();
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Checking out");
+				controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Checking out");
+				controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task " + taskNumber + " - " + "Checking out \n");
+				
+				printWriter.close();
 
+				//Open JSON Parse file to get billing and shipping info				
+				JSONParser parser = new JSONParser();
+				
+				JSONObject a = (JSONObject) parser.parse(new FileReader(System.getProperty("user.dir")+ "/resources/json/" + profileLoader  +".json"));
+				
+				billingFirstName = (String) a.get("Fullname");
+				billingEmail = (String) a.get("Email");
+				telephone = (String) a.get("Telephone");
+				billingAddress = (String) a.get("Address");
+				billingCity  = (String) a.get("City");
+				billingPostcode  = (String) a.get("Postcode");
+				country = (String) a.get("Country");
+				cardType = (String) a.get("Card Type");
+				cardExpiry = (String) a.get("Card Expiry Month");
+				cardYear = (String) a.get("Card Expiry Year");
+				cardNumber = (String) a.get("Card Number");
+				cardCvv = (String) a.get("Card Security Code");
+
+				
+				//Check T&C box
+				WebElement element = driver.findElement(By.xpath("//*[@id=\"cart-cc\"]/fieldset/p/label/div/ins"));
+				element.click();
+
+				billing_name_js.executeScript(" $( document ).ready(function() {$('#order_email').val('someone@test.com'); });");
+				//	billing_name_js.executeScript("document.getElementById('order_billing_name').setAttribute('value', ' " + billingFirstName + "')");
+				order_email_js.executeScript("document.getElementById('order_email').setAttribute('value', '"+ billingEmail + "')");
+				order_tel_js.executeScript("document.getElementById('order_tel').setAttribute('value', '"+ telephone +"')");
+				order_address_js.executeScript("document.getElementById('bo').setAttribute('value', '"+billingAddress +"')");
+				order_postcode_js.executeScript("document.getElementById('order_billing_zip').setAttribute('value', '"+billingPostcode+"')");
+				order_city_js.executeScript("document.getElementById('order_billing_city').setAttribute('value', '"+billingCity+"')");
+				order_card_js.executeScript("document.getElementById('cnb').setAttribute('value', '"+cardNumber+"')");
+				order_cvv_js.executeScript("document.getElementById('vval').setAttribute('value', '"+cardCvv+"')");
+				
+				
+				//Select Country
+				WebElement countryDropDown = driver.findElement(By.xpath("//*[@id=\"order_billing_country\"]"));
+				countryDropDown.click();
+				new Select(countryDropDown).selectByVisibleText(country);
+				
+				//Select Card Type
+				js.executeScript("$('select[name=\"credit_card[type]\"]').click();");
+				Select cardTypeDropDown = new Select(driver.findElement(By.name("credit_card[type]")));
+				cardTypeDropDown.selectByVisibleText(cardType);
+				
+				
+				
+				//Select Card Expiry and Year
+				WebElement expiryMonthDropDown = driver.findElement(By.xpath("//*[@id=\"credit_card_month\"]"));
+				expiryMonthDropDown.click();
+				new Select(expiryMonthDropDown).selectByVisibleText(cardExpiry);
+				
+				WebElement expiryYearDropDown = driver.findElement(By.xpath("//*[@id=\"credit_card_year\"]"));
+				expiryYearDropDown.click();
+				new Select(expiryYearDropDown).selectByVisibleText(cardYear);
+				
+	
+				
+				
+				
+				if (checkoutDelay > 0) {
+					Thread.sleep(checkoutDelay);
+					WebElement checkoutButton = driver.findElement(By.name("commit"));
+					js.executeScript("arguments[0].click();", checkoutButton);
+					controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Captcha required");
+					controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task " +taskNumber + " - " +  "Please solve captcha \n");
+					Thread.currentThread().wait();
+				} else {
+					WebElement checkoutButton = driver.findElement(By.name("commit"));
+					js.executeScript("arguments[0].click();", checkoutButton);
+					controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Captcha required");
+					controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task " + taskNumber + " - " +  "Please solve captcha \n");
+					Thread.currentThread().wait();
+				}
+				
+			} else {
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Checkout Failed");
+				controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task " + taskNumber + " - Checkout Failed \n");
 			}
-		}
+			
+			if(driver.getPageSource().contains("you will recieve a shipping confirmation with the tracking number")) {
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + " - Checked out");
+				controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "] - Task " + taskNumber + " - Checked out! \n");
+			}
+	}
 	
 	
 	//Method to input authenticate in chrome Browser -- currently not working
@@ -179,26 +334,31 @@ public class Selenium {
 
 			int statusCode = response.statusCode();
 			
-			if (statusCode == 404) {
-				driver.close();
+			if (!(statusCode == 200)) {
+				controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Website not reachable");
+				driver.quit();
 			}
 			
 			//Connect to requested webpage if errors are clear
 			org.jsoup.nodes.Document doc = Jsoup.connect(mainURL + category).get();
-			System.out.println(doc.baseUri());
 			
 	
 			//Search webpage for keyword within articles and store in the attributes hashmap 
 			List<Element> articles = doc.getElementsByClass("inner-article");
-	
-			for (Element info : articles) {
-				if (info.getElementsByClass("name-link").toString().contains(keyword) && info.getElementsByClass("name-link").get(1).toString().contains(color)) {
-					attributes.put(info.getElementsByClass("name-link").text(), info.getElementsByClass("name-link").attr("abs:href").toString());
-					System.out.println("Item Found!");
-				} 
-				else {
-					 System.out.println("Item Not Found! Retrying");
+			try {
+				for (Element info : articles) {
+					if (info.getElementsByClass("name-link").toString().contains(keyword) && info.getElementsByClass("name-link").get(1).toString().contains(color)) {
+						attributes.put(info.getElementsByClass("name-link").text(), info.getElementsByClass("name-link").attr("abs:href").toString());
+						printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Found!");
+					} 
+					else  {
+						printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! Retrying!");
+						controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Item not found");
+					}
 				}
+			} catch (WebDriverException e) {
+				printWriter.println("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Item Not Found! Retrying!");
+				controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Error occurred");
 			}
 	
 			// Get the URL from the HashMap, clean it and save it in finalURL
@@ -209,18 +369,28 @@ public class Selenium {
 			}
 			//Catch any errors to quite the chrome driver
 		} catch (NullPointerException e) {
-	        e.printStackTrace();
+			controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Error occurred");
+			e.printStackTrace();
 	        driver.quit();
-	        SupremeBotOverviewController.getSupremeBotOverviewController().stopTasks();
 	    } catch (HttpStatusException e) {
+	    	controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Error occurred");
 	        e.printStackTrace();
 	        driver.quit();
-	        SupremeBotOverviewController.getSupremeBotOverviewController().stopTasks();
 	    } catch (IOException e) {
 	        e.printStackTrace();
+	        controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Error occurred");
 	        driver.quit();
-	        SupremeBotOverviewController.getSupremeBotOverviewController().stopTasks();
 	    }
+	}
+
+	@Override
+	public void run() {
+		try {
+			this.main(null);
+		} catch (IOException | InterruptedException | ParseException e) {
+			controller.returnTasks().getItems().get(taskNumber - 1).setStatus("Error occurred");
+			e.printStackTrace();
+		}
 	}
 
 }

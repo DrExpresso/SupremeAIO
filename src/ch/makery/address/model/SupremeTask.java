@@ -11,61 +11,108 @@ public class SupremeTask {
 	private final SimpleStringProperty id;
 	private final SimpleStringProperty item;
 	private final SimpleStringProperty billingProfile;
-	private final SimpleStringProperty proxy;
 	private final SimpleStringProperty mode;
+	private final SimpleStringProperty colour;
+	private final SimpleStringProperty category;
+	private final SimpleStringProperty size;
+
+
 	
 	//Status Information
-	private final SimpleStringProperty status;
+	private SimpleStringProperty status;
 	private final SimpleStringProperty statusRunning;
 	private final SimpleStringProperty foundItem;
+	private final SimpleStringProperty fetchingVariants;
+	private final SimpleStringProperty addingToCart;
 	private final SimpleStringProperty checkout;
 	private final SimpleStringProperty checkedOut;
-	
+	private final SimpleStringProperty reCaptchaToken;
+	private final SimpleStringProperty startTimer;
+	private final SimpleStringProperty autoStart;
+	private final SimpleStringProperty itemNotFound;
+	private final SimpleStringProperty errorOccured;
 	
 	public SupremeTask() {
-        this(null, null, null, null, null, null);
+        this(null, null, null, null, null, null, null, null);
     }
 	
-	public SupremeTask(String id, String item, String billingProfile, String proxy, String status, String mode) {
+	public SupremeTask(String id, String item,String size, String colour, String category, String billingProfile, String status, String mode) {
 			this.id =  new SimpleStringProperty(id);
 			this.item =  new SimpleStringProperty(item);
 			this.billingProfile = new SimpleStringProperty(billingProfile);
-			this.proxy =  new SimpleStringProperty(proxy);
 			this.status =  new SimpleStringProperty(status);
 			this.mode =  new SimpleStringProperty(mode);
+			this.colour =  new SimpleStringProperty(colour);
+			this.category =  new SimpleStringProperty(category);
+			this.size =  new SimpleStringProperty(size);
+			this.status = new SimpleStringProperty("Ready");
 			this.statusRunning = new SimpleStringProperty("Running");
-			this.foundItem = new SimpleStringProperty("Adding to cart...");
+			this.errorOccured = new SimpleStringProperty("Error occurred");
+			this.foundItem = new SimpleStringProperty("Item found");
+			this.itemNotFound = new SimpleStringProperty("Item not found");
+			this.addingToCart = new SimpleStringProperty("Adding to cart...");
+			this.fetchingVariants = new SimpleStringProperty("Fetching variants.");
 			this.checkout = new SimpleStringProperty("Checking out");
+			this.reCaptchaToken = new SimpleStringProperty("Captcha required");
 			this.checkedOut = new SimpleStringProperty("Check your email");
+			this.startTimer = new SimpleStringProperty("Launching at: " + keywordInfo.getKeywordInfo().getStartTimer());
+			this.autoStart = new SimpleStringProperty("Launching at: 11:00:00");
 		}
 
 		public String getId( ) {
 			return id.get();
-		}
+		}	
 		
-		
-		public StringProperty getIdProperty( ) {
+		public SimpleStringProperty getIdProperty( ) {
 			return id;
 		}
 		
 		public StringProperty getIemProperty( ) {
 			return item;
 		}
+		
+		public StringProperty getColourProperty( ) {
+			return colour;
+		}
+		
+		public StringProperty getSizeProperty( ) {
+			return size;
+		}
+		
+		public StringProperty getCategoryProperty( ) {
+			return category;
+		}
 
 		public StringProperty getBillingProperty( ) {
 			return billingProfile;
+		}
+		
+		public StringProperty getAutostartProperty( ) {
+			return autoStart;
 		}
 		
 		public StringProperty getModeProperty() {
 			return mode;
 		}
 		
-		public StringProperty getProxyProperty( ) {
-			return proxy;
+		public StringProperty getItemNotFoundProperty( ) {
+			return itemNotFound;
+		}
+		
+		public StringProperty getFetchingVariantsProperty( ) {
+			return fetchingVariants;
 		}
 		
 		public StringProperty getStatusProperty( ) {
 			return status;
+		}
+		
+		public StringProperty getStartTimerProperty( ) {
+			return startTimer;
+		}
+		
+		public StringProperty getErrorProperty( ) {
+			return errorOccured;
 		}
 		
 		public StringProperty getStatusRunningProperty( ) {
@@ -74,6 +121,14 @@ public class SupremeTask {
 		
 		public StringProperty getFoundItemProperty( ) {
 			return foundItem;
+		}
+		
+		public StringProperty getRecaptchaTokenProperty( ) {
+			return reCaptchaToken;
+		}
+		
+		public StringProperty getAddingToCartProperty( ) {
+			return addingToCart;
 		}
 		
 		public StringProperty getCheckoutProperty( ) {
@@ -90,6 +145,18 @@ public class SupremeTask {
 		
 		public String getIem( ) {
 			return item.get();
+		}
+		
+		public String getSize( ) {
+			return size.get();
+		}
+		
+		public String getColour( ) {
+			return colour.get();
+		}
+		
+		public String getCategory( ) {
+			return category.get();
 		}
 		
 		public String getMode( ) {
@@ -113,18 +180,10 @@ public class SupremeTask {
 			this.billingProfile.set(billingProfile);
 		}
 		
-		public String getProxy( ) {
-			return proxy.get();
-		}
-		
-		public void setProxy(String proxy) {
-			this.proxy.set(proxy);
-		}
-		
 		@Override
 		public String toString() {
 			return "SupremeTask [id=" + id + ", item=" + item + ", billingProfile=" + billingProfile + ", proxy="
-					+ proxy + ", mode=" + mode + ", status=" + status + ", statusRunning=" + statusRunning + "]";
+					 + ", mode=" + mode + ", status=" + status + ", statusRunning=" + statusRunning + "]";
 		}
 
 		public String getStatus( ) {

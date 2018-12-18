@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
+	<script src='https://www.google.com/recaptcha/api.js'></script>
+	
     <style>
     .center {
         display: block;
@@ -27,6 +30,11 @@
         -webkit-user-select: none;
         -ms-user-select: none;
     }
+    .g-recaptcha{
+   		display: inline-block;
+   		padding: 45px;
+
+    }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -35,6 +43,7 @@
 </head>
 <body>
     <img src="images/reCaptcha.png" alt="" class="center">
-    <img src="images/spinner-animation.gif" alt="" class="spinner">
+  	<div class="g-recaptcha" data-sitekey="6LcUbHEUAAAAAAJ603kJJhhqww1fTcGRT0jjCCwG"></div>
+
 </body>
 </html>

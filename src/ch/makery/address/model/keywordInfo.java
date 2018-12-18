@@ -12,6 +12,10 @@ public class keywordInfo {
 	private String proxy;
 	private String modeID;
 	private int totalTasks;
+	private int checkoutDelay;
+	private String startTimer;
+	private String profileLoader;
+	private boolean hasRunStarted = false;
 
 	public static keywordInfo getKeywordInfo() {
 		return model;
@@ -19,6 +23,14 @@ public class keywordInfo {
 
 	public String getKeyword() {
 		return keywords;
+	}
+	
+	public String getProfileLoader() {
+		return profileLoader;
+	}
+	
+	public String getStartTimer() {
+		return startTimer;
 	}
 
 	public int getTotalTasks() {
@@ -39,6 +51,31 @@ public class keywordInfo {
 
 	public String getProxy() {
 		return proxy;
+	}
+	
+	public int getCheckoutDelay() {
+		return checkoutDelay;
+	}
+	
+	public boolean getHasRunStarted() {
+		return hasRunStarted;
+	}
+	
+	public void setHasRunStarted(boolean newValueID) {
+		this.hasRunStarted = newValueID;
+	}
+	
+	public void setProfileLoader(String profileLoaderID) {
+		this.profileLoader = profileLoaderID;
+	}
+	
+
+	public void setStartTimer(String starTimerID) {
+		this.startTimer = starTimerID;
+	}
+	
+	public void setCheckoutDelay(int checkoutDelayID) {
+		this.checkoutDelay = checkoutDelayID;
 	}
 	
 	public void setTasks(int totalTasksID) {
@@ -65,18 +102,18 @@ public class keywordInfo {
 		this.catagory = catagory;
 	}
 
-	@Override
-	public String toString() {
-		return "keywordInfo [keywords=" + keywords + ", size=" + size + ", color=" + color + ", catagory=" + catagory
-				+ ", proxy=" + proxy + ", totalTasks=" + totalTasks + "]";
-	}
-
 	public void setMode(String modeID) {
 		this.modeID = modeID;
 	}
 	
 	public String getMode() {
 		return modeID;
+	}
+	
+	@Override
+	public String toString() {
+		return "keywordInfo [keywords=" + keywords + ", size=" + size + ", color=" + color + ", catagory=" + catagory
+				+ ", proxy=" + proxy + ", totalTasks=" + totalTasks + ", checkoutDelay=" + checkoutDelay + "]";
 	}
 
 }

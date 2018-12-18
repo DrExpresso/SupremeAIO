@@ -1,0 +1,33 @@
+.root {
+	-fx-background-image: url("../resources/images/slackBackground.png");
+	-fx-background-repeat: no-repeat;
+  	-fx-background-position: bottom left;
+  	-fx-background-color:transparent;
+}
+
+.text-field {
+  -fx-border-radius: 10 10 10 10;
+  -fx-background-radius: 10 10 10 10;
+
+  /* top-left, top-right, bottom-right, and bottom-left corners, in that 
+  order. */
+ }
+ 
+ .button {
+ 	-fx-background-color: 
+        #387A4B,
+        linear-gradient(#387A4B 0%, #1F4329 20%, #1F4329 100%),
+        linear-gradient(#203E2B, #195422),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,181,148,0.9), rgba(255,255,255,0));
+        -fx-background-radius: 30;
+    	-fx-text-fill: #654b00;
+    	-fx-background-insets: 0,1,2,0;
+    	-fx-font-weight: bold;
+      	-fx-cursor: hand;
+ }
+ 
+ .label {
+ 	-fx-text-fill: #2b4cff;
+ 	-fx-font-weight: bold;
+  	-fx-effect: dropshadow( gaussian , rgba(255,255,255,0.5) , 0,0,0,1 );  
+ }

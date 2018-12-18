@@ -1,19 +1,12 @@
-.table-row {
-    -fx-background-color:#F7F7F7;
-    -fx-background-radius: 20;
-     -fx-alignment: center;
-      -fx-border-color: white;
-      -fx-alignment: CENTER;
+.background {
+    -fx-background-color: white;
 }
 
-.table-view .column-header .label {
-    -fx-font-size: 10pt;
-    -fx-font-family: "Segoe UI";
-    -fx-text-fill: black;
-    -fx-alignment: center;
-    -fx-opacity: 1;
-    
+#pane{
+     -fx-background-color: white;
 }
+
+
 
 .text-field {
     -fx-background-color: #a9a9a9 , white , white;
@@ -30,73 +23,6 @@
 }
 
 
-.table-row-cell:empty {
-    -fx-background-color: transparent;
-}
-
-.table-view .table-row-cell:hover {
-    -fx-background-color:#F9E1E1;
-}
-
-.table-view .table-row-cell:empty:hover  {
-    -fx-background-color: transparent;
-}
-
-
-.progress-indicator {
-    -fx-progress-color: red;
-}
-
-
-
-.table-row-cell{
-    -fx-background-insets: 0, 0 0 1 0;
-    -fx-padding: 0.0em; /* 0 */
-    -fx-background-radius: 20;
-     -fx-alignment: center;
-      -fx-background: #F9F9F9;
-       -fx-border-color: white;
-}
-
-.table-column {
-  -fx-alignment: CENTER;
-}
-
-.table-row .label{
-	-fx-alignment: CENTER;
-}
-
-.table-view{
-	-fx-control-inner-background-alt: -fx-control-inner-background ;
-	-fx-base: white;
-    -fx-control-inner-background: white;
-    -fx-background-color: white;
-    -fx-table-cell-border-color: transparent;
-    -fx-table-header-border-color: transparent;
-	-fx-background-radius: 20;
-	 -fx-background-color:white;
-	 -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 0);
-	 -fx-alignment: CENTER;
-}
-
-.table-view .column-header-background{
-    -fx-background-color: #393939;
-    -fx-border-radius: 10 10 0 0;
-  -fx-background-radius: 10 10 0 0;
-}
-
-.table-view .column-header-background .label{
-    -fx-background-color: transparent;
-    -fx-text-fill: white;
-    -fx-alignment: CENTER;
-    
-}
-
-.table-view .column-header {
-    -fx-background-color: transparent;
-    -fx-background-radius: 20;
-    -fx-alignment: CENTER;
-}
 
 .combo-box .list-cell {
     -fx-text-fill: -fx-my-menu-font-color-highlighted;

@@ -180,7 +180,7 @@ public class Person {
 		
 	
 		
-		try (Writer file = new FileWriter(System.getProperty("user.dir")+ "/resources/json/" + "/Default_Profile.json")) {
+		try (Writer file = new FileWriter(System.getProperty("user.dir")+ "/resources/json/" + "/" + profileName + ".json")) {
 			file.write(JsonWriter.formatJson(obj.toJSONString()));
 			file.flush();
 			System.out.println("Successfully Copied JSON Object to File...");

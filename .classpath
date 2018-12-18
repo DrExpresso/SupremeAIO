@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry excluding="src/" kind="src" path=""/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/byte-buddy-1.8.3.jar"/>
@@ -8,24 +12,31 @@
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/client-combined-3.13.0-sources.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/commons-codec-1.10.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/commons-exec-1.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/commons-io-2.6.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/commons-logging-1.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/controlsfx-8.40.14.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/gradle-wrapper.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/gson-2.8.4.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/gson-2.8.5.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/guava-23.6-jre.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/guava-25.0-jre.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/htmlunit-2.32.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/htmlunit-driver-2.31.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/httpclient-4.5.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/httpclient-4.5.5.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/httpcore-4.4.6.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/httpcore-4.4.9.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/javax.json-api-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/json-20180813.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/json-io-4.10.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/json-simple-1.1.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/jsoup-1.11.3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/jtidy-r938.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/okhttp-3.10.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/okio-1.14.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/phantomjsdriver-1.2.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/selenium-chrome-driver-3.13.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/selenium-java-3.13.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/phantomjsdriver-1.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Prati/Documents/eclipse-workspace/Projects/SupremeAIO/libraries/geoip2-2.12.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
