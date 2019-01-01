@@ -141,7 +141,7 @@ public class SupremeBotOverviewController {
 			"---------", "30", "32", "34", "36", "38", "40");
 
 	private ObservableList<String> statusList = FXCollections.observableArrayList("all", "Jackets", "shirts", "tops_sweaters",
-			"sweatshirts", "pants", "shorts", "t-shirts", "hats", "bags", "accessories", "skate");
+			"sweatshirts", "pants", "shorts", "t-shirts", "hats", "bags", "accessories", "shoes","skate");
 
 	private ObservableList<String> modeList = FXCollections.observableArrayList("Browser", "Mobile", "Requests");
 
