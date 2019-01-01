@@ -1,10 +1,8 @@
 package ch.makery.address.view;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.Method;
@@ -20,9 +18,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.apache.commons.io.IOUtils;
 import org.controlsfx.control.Notifications;
 import org.controlsfx.control.ToggleSwitch;
@@ -36,6 +31,7 @@ import ch.makery.address.model.Person;
 import ch.makery.address.model.SupremeTask;
 import ch.makery.address.model.keywordInfo;
 import ch.makery.address.selenium.InstoreRegistrationSelenium;
+import ch.makery.address.selenium.MobileCheckout;
 import ch.makery.address.selenium.Request;
 import ch.makery.address.selenium.Selenium;
 import javafx.application.Platform;
@@ -166,6 +162,7 @@ public class SupremeBotOverviewController {
 	
 	private SupremeBotOverviewController passableController;
 	private Selenium browser;
+	private MobileCheckout mobileBrowser;
 
 	/**
 	 * Is called by the main application to give a reference back to itself.
@@ -191,6 +188,10 @@ public class SupremeBotOverviewController {
 	
 	public void setBrowserMode(Selenium browser) {
 		this.browser = browser;
+	}
+	
+	public void setMobileMode(MobileCheckout mobile) {
+		this.mobileBrowser = mobile;
 	}
 
 	public TextField getKeyword() {
