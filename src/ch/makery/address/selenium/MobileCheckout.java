@@ -14,6 +14,7 @@ import java.util.Date;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import ch.makery.address.model.keywordInfo;
@@ -36,8 +37,8 @@ public class MobileCheckout implements Runnable {
 	private String color;
 	private String profileLoader;
 	
-	//Mobile user-agent
-	private String userAgent = "Mozilla/5.0 (iPhone; CPU iPhone OS 12_0_1 like Mac OS X) AppleWebKit/605.1.15 "
+	//Mobile user-agent (IPHONE IOS 12- SAFARI BROWSER 12)
+	private String userAgent = "--user-agent=Mozilla/5.0 (iPhone; CPU iPhone OS 12_0_1 like Mac OS X) AppleWebKit/605.1.15 "
 								+ "(KHTML, like Gecko) Version/12.0 Mobile/15E148 Safari/604.1";
 	//URLS
 	private String mainURL = "https://www.supremenewyork.com/mobile/";
@@ -63,11 +64,7 @@ public class MobileCheckout implements Runnable {
 	
 	@Override
 	public void run() {
-		try {
-			this.main(null);
-		} catch (IOException | InterruptedException | ParseException e) {
-			e.printStackTrace();
-		}
+		this.main(null);
 	}
 	
 	/**
@@ -94,15 +91,13 @@ public class MobileCheckout implements Runnable {
 		//Driver initialisation 
         System.setProperty("webdriver.chrome.driver", System.getProperty("user.dir")+ "/resources/" +"/chromedriver.exe");
      	
-     	//Setting user agent
-     	DesiredCapabilities capability = DesiredCapabilities.chrome();
-     	capability.setBrowserName("iPhone");
-     	capability.setPlatform(Platform.IOS);
-
      	
-     	 // Create a new instance of the Chrome driver and attach properties
-		ChromeOptions options = new ChromeOptions();		
+     	//Create a new instance of the Chrome driver and attaches user-agent properties
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments(userAgent);
+
      	driver = new ChromeDriver(options);
+     	driver.get(mainURL);
   
 				
 		//Create log file before executing any other task
