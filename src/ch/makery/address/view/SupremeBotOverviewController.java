@@ -147,7 +147,7 @@ public class SupremeBotOverviewController {
 	private ObservableList<String> statusList = FXCollections.observableArrayList("all", "Jackets", "shirts", "tops_sweaters",
 			"sweatshirts", "pants", "shorts", "t-shirts", "hats", "bags", "accessories", "skate");
 
-	private ObservableList<String> modeList = FXCollections.observableArrayList("Browser", "Requests");
+	private ObservableList<String> modeList = FXCollections.observableArrayList("Browser", "Mobile", "Requests");
 
 	private ObservableList<String> colourList = FXCollections.observableArrayList("Red", "Orange", "Yellow", "Green", "Cyan",
 			"Blue", "Indigo", "Violet", "Purple", "Magenta", "Pink", "Brown", "White", "Grey", "Black", "Light Pink", "Royal", 

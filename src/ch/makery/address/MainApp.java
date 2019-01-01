@@ -1,7 +1,13 @@
 package ch.makery.address;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -9,6 +15,14 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 import ch.makery.address.model.ProxyTask;
 import ch.makery.address.model.SupremeTask;
@@ -70,13 +84,13 @@ public class MainApp extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws IOException, InterruptedException {
 		// Main preferences
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("SupremeAIO");
 		this.primaryStage.getIcons()
-				.add(new Image("file:" + System.getProperty("user.dir") + "/resources/images/" + "icon.png"));
-
+				.add(new Image("file:" + System.getProperty("user.dir") + "/resources/images/" + "icon.png"));		
+			  
 		initRootLayout();
 	}
 
@@ -99,7 +113,7 @@ public class MainApp extends Application {
 			
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "", e);
-		}
+		} 
 	}
 
 
@@ -472,7 +486,7 @@ public class MainApp extends Application {
 		return primaryStage;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		launch(args);
 	}
 }
