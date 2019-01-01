@@ -832,6 +832,11 @@ public class SupremeBotOverviewController {
 						Thread taskInformation  = new Thread(new Request(passableController, Integer.parseInt(task.getId()) ,task.getIem().toString(), task.getSize(), task.getCategory(), task.getColour(), task.getBillingProfile()));
 						this.threads.add(taskInformation);
 					}
+				} else if (supremeTask.getItems().toString().contains("Mobile")) {
+					for (SupremeTask task :supremeTask.getItems()) {
+						Thread taskInformation  = new Thread(new MobileCheckout(passableController, Integer.parseInt(task.getId()) ,task.getIem().toString(), task.getSize(), task.getCategory(), task.getColour(), task.getBillingProfile()));
+						this.threads.add(taskInformation);
+					}
 				}
 		
 				//Start the threads one by one
@@ -882,6 +887,11 @@ public class SupremeBotOverviewController {
 			} else if (supremeTask.getItems().toString().contains("Browser")) {
 				for (SupremeTask task :supremeTask.getItems()) {
 					Thread taskInformation  = new Thread(new Selenium(passableController, Integer.parseInt(task.getId()) ,task.getIem().toString(), task.getSize(), task.getCategory(), task.getColour(), task.getBillingProfile()));
+					threads.add(taskInformation);
+				}	
+			} else if (supremeTask.getItems().toString().contains("Mobile")) {
+				for (SupremeTask task :supremeTask.getItems()) {
+					Thread taskInformation  = new Thread(new MobileCheckout(passableController, Integer.parseInt(task.getId()) ,task.getIem().toString(), task.getSize(), task.getCategory(), task.getColour(), task.getBillingProfile()));
 					threads.add(taskInformation);
 				}	
 			}

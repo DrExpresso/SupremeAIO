@@ -3,7 +3,9 @@
  */
 package ch.makery.address.selenium;
 
+import java.io.File;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
@@ -110,15 +112,18 @@ public class MobileCheckout implements Runnable {
 	}
 	
 	public void log_creator() throws IOException {
-		//Create Log File
-		try (Writer file = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/" + "/Log_Task_" + "1" + ".txt")) {
-			file.flush();
-			controller.getConsole().appendText("[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) +  "]" + " - " + "Successfully created log file \n");
+		String fileName = "[" + new SimpleDateFormat("HH.mm.ss.SSS").format(new Date()) + "] - MOBILE - " + taskNumber +".txt";
+		
+		//Start the print writer to Log to the file with default message
+		try (FileWriter file = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/" + fileName)){
+			printWriter = new PrintWriter(file);
+			
+			printWriter.println("LOG [TASK: " + taskNumber + " -- " +  " Time: " + new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date()) + "]");
+			printWriter.println("Checkout Mode: MOBILE");	
+			printWriter.println("Configuration:   --checkout-delay: " + checkoutDelay + "   --retry-counter: " + retryCounter);	
+			printWriter.println();	
+			printWriter.close();
 		}
-				
-		//Start the print writer to Log to the file
-		FileWriter rawLogOutput = new FileWriter(System.getProperty("user.dir")+ "/resources/Logs/Log_Task_1.txt");
-		printWriter = new PrintWriter(rawLogOutput);
 	}
 
 
