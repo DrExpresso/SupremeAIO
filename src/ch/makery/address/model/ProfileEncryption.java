@@ -48,7 +48,7 @@ public class ProfileEncryption {
 		try {
 			ProfileEncryption.fileProcessor(Cipher.ENCRYPT_MODE, key, inputFile, encryptedFile);
 			ProfileEncryption.fileProcessor(Cipher.DECRYPT_MODE, key, encryptedFile, decryptedFile);
-			System.out.println("Sucess");
+			System.out.println("Success");
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 			ex.printStackTrace();
